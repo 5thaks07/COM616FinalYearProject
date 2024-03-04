@@ -1,15 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
 
 const Navbar = () => {
   return (
+    <nav>
     <div className="navbar">
       <div className="logo">YumYumHub</div>
       <input type="text" placeholder="Search recipes..." />
-      <Link to="/chat">
-        <div className="chat-logo">Chat</div>
-      </Link>
     </div>
+    </nav>
   );
 };
 

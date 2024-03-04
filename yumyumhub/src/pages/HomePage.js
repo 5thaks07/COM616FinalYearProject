@@ -1,6 +1,7 @@
 import React from 'react';
 import RecipeCard from '../components/RecipeCard';
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function RecipeList() {
   const recipes = [
@@ -26,8 +27,9 @@ function RecipeList() {
   ];
 
   return (
-    <div>
-      <Navbar />
+    <>
+    <div className="Home">
+      <div className='Navbar'> <Navbar /> </div>
       <h1>Recipes</h1>
       <p>Explore a wide range of recipes from around the world.</p>
       {recipes.map((recipe) => (
@@ -38,7 +40,13 @@ function RecipeList() {
           description={recipe.description}
         />
       ))}
+     <div/>
+    
+    <Footer />
     </div>
+    </> 
+    
+
       
       
       
