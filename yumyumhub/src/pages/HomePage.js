@@ -1,5 +1,6 @@
 import React from 'react';
 import RecipeCard from '../components/RecipeCard';
+import Navbar from "../components/Navbar";
 
 function RecipeList() {
   const recipes = [
@@ -25,8 +26,10 @@ function RecipeList() {
   ];
 
   return (
-    <main style={{ maxWidth: '800px', margin: '20px auto', padding: '20px', backgroundColor: 'white', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', borderRadius: '5px' }}>
-      <h2>Featured Recipes</h2>
+    <div>
+      <Navbar />
+      <h1>Recipes</h1>
+      <p>Explore a wide range of recipes from around the world.</p>
       {recipes.map((recipe) => (
         <RecipeCard
           key={recipe.id}
@@ -35,7 +38,11 @@ function RecipeList() {
           description={recipe.description}
         />
       ))}
-    </main>
+    </div>
+      
+      
+      
+    
   );
 }
 
