@@ -2,11 +2,11 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import HomePage from "./components/HomePage";
-import ChatPage from "./components/ChatPage";
-import LoginPage from "./components/LoginPage";
-import RegisterPage from "./components/RegisterPage";
-import UploadPage from "./components/UploadPage";
+import HomePage from "./pages/HomePage";
+import ChatPage from "./pages/ChatPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import UploadPage from "./pages/UploadPage";
 import "./App.css"; // Import the CSS file
 
 const App = () => {
