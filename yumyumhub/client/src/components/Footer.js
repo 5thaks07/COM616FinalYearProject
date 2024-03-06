@@ -8,12 +8,12 @@ function Footer() {
         padding: "10px",
         backgroundColor: "#333",
         color: "white",
-        position: "fixed",
+        
         bottom: "0",
         width: "100%",
       }}
     >
-      &copy; 2024 Recipe Sharing
+      &copy; 2024 YumYumHub
     </footer>
   );
 }
