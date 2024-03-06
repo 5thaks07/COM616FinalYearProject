@@ -22,8 +22,8 @@ const App = () => {
   return (
     <Router>
       <div className="app">
+        <Sidebar userImage={user.image} />
         <div className="content">
-          <Sidebar userImage={user.image} />
           <Routes>
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/" element={<HomePage />} />

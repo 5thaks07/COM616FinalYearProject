@@ -1,10 +1,20 @@
+// RecipeCard.js
 import React from 'react';
 
 const RecipeCard = ({ recipe }) => {
-  // Implement your recipe card UI here
+  // Check if recipe is defined
+  if (!recipe) {
+    return null; // or handle it in some way
+  }
+
+  // Extract details from the recipe prop
+  const { image, title, description } = recipe;
+
   return (
     <div className="recipe-card">
-      {/* Display recipe details */}
+      <img src={image} alt={title} />
+      <h3>{title}</h3>
+      <p>{description}</p>
     </div>
   );
 };
