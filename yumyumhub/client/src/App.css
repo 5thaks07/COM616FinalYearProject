@@ -11,35 +11,9 @@ body {
   min-height: 100vh; /* Ensure the app takes up at least the full height of the viewport */
 }
 
-.sidebar {
-  width: 200px;
-  padding: 20px;
-  margin-right: 10px;
-  background-color: #65bafc;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-  font-size: 16px; /* Adjust font size as needed */
-}
 
-.sidebar img {
-  border-radius: 50%;
-  width: 100%;
-  margin-bottom: 10px;
-}
 
-.sidebar a {
-  display: block;
-  margin-bottom: 10px;
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px; /* Adjust font size as needed */
-}
 
-.sidebar a.profile-link {
-  font-size: 18px; /* Larger font size for the user profile link */
-}
 
 .content {
   flex: 1;
