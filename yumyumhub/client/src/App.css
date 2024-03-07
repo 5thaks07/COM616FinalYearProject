@@ -1,5 +1,3 @@
-/* App.css */
-
 body {
   margin: 0;
   padding: 0;
@@ -10,10 +8,6 @@ body {
   display: flex;
   min-height: 100vh; /* Ensure the app takes up at least the full height of the viewport */
 }
-
-
-
-
 
 .content {
   flex: 1;
@@ -28,57 +22,8 @@ body {
   align-items: center; /* Center content vertically */
 }
 
-.navbar .logo {
-  display: flex;
-  align-items: center;
-  margin-right: auto; /* Push the logo to the left */
-}
-
 .navbar input {
   padding: 8px;
   width: 300px;
   margin-left: auto; /* Push the input to the right */
-}
-
-.Home {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.Home h1 {
-  margin-bottom: 10px;
-}
-
-.Home p {
-  max-width: 600px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.recipe-card {
-  width: calc(
-    33.33% - 40px
-  ); /* Adjust card width as needed, subtracting margin */
-  margin: 70px; /* Increase margin for larger gaps */
-  padding: 100px; /* Increase padding for a larger card size */
-  border: 5px solid #ddd;
-  border-radius: 16px; /* Increase border-radius for a rounded look */
-  text-align: center;
-}
-
-.recipe-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Three columns per row */
-  gap: 20px; /* Increase gap for larger gaps between cards */
-  max-width: 1200px; /* Adjust max-width as needed */
-  margin: 10px auto;
-}
-.footer {
-  background-color: #f8f8f8;
-  text-align: center;
-  padding: 10px;
-  color: white;
-  bottom: "0";
-  width: "100%";
 }
