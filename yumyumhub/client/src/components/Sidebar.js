@@ -27,7 +27,7 @@ const Sidebar = () => {
 
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
-            <Link to="/profile">
+            <Link to="/user-profile">
               <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
             </Link>
             <Link to="/">
