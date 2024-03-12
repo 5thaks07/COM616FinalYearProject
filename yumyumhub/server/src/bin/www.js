@@ -1,9 +1,12 @@
-import {} from 'dotenv/config';
-
+import dotenv from 'dotenv';
 import { createServer } from 'http';
 import mongoose from 'mongoose';
 import chalk from 'chalk';
 import app from '../app.js';
+
+// Specify the path to your .env file in the root folder
+dotenv.config({ path: '../.env' });
+
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
@@ -27,8 +30,8 @@ mongoose.connection.on('error', (err) => {
 // Start the server
 const server = createServer(app);
 
-server.listen(3000, () => {
-    console.log('Server is running on port 3000');
+server.listen(5000, () => {
+    console.log('Server is running on port 5000');
 });
 
 // Handle shutdown gracefully
