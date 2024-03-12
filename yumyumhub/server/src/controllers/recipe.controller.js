@@ -7,6 +7,7 @@ export const createRecipe = async (req, res) => {
   try {
     const {
       name,
+      type,
       shortDescription,
       fullDescription,
       ingredients,
@@ -18,6 +19,7 @@ export const createRecipe = async (req, res) => {
     // Check if all required fields are provided
     if (
       !name ||
+      !type ||
       !shortDescription ||
       !fullDescription ||
       !ingredients ||
@@ -33,6 +35,7 @@ export const createRecipe = async (req, res) => {
     const recipe = await Recipe.create({
       userId,
       name,
+      type,
       shortDescription,
       fullDescription,
       ingredients,
