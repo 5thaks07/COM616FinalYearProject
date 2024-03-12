@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 
 import UserRouter from './routes/user.route.js';
+import RecipeRouter from './routes/recipe.route.js';
 import HealthRouter from './routes/health.router.js';
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/user', UserRouter);
+app.use('/recipe', RecipeRouter);
 app.use('/health', HealthRouter);
 
 export default app;
