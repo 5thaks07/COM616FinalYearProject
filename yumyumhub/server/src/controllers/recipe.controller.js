@@ -1,6 +1,37 @@
 import { Recipe } from '../models/Recipe.js';
 import mongoose from 'mongoose';
 
+export const getRecipes = async (req, res) => {
+  try {
+    let recipes;
+    const type = req.query.search;
+
+    // if admin, return all Recipes
+    if (type && res.locals.user.admin) {
+      recipes = await Recipe.find({ type: type });
+    }
+    // if not admin, return all Recipes with type
+    else if (type) {
+      recipes = await Recipe.find({
+        type: type,
+      });
+    }
+
+    // if not admin, return all Recipes
+    else {
+      recipes = await POI.find();
+    }
+
+    // check if Recipes found
+    if (!recipes) return res.status(500).json({ message: 'No Recipes found' });
+
+    return res.json(recipes);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 export const createRecipe = async (req, res) => {
   const userId = res.locals.user._id;
 
