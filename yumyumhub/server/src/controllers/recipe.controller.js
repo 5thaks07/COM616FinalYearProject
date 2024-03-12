@@ -19,7 +19,7 @@ export const getRecipes = async (req, res) => {
 
     // if not admin, return all Recipes
     else {
-      recipes = await POI.find();
+      recipes = await Recipe.find();
     }
 
     // check if Recipes found
