@@ -9,7 +9,7 @@ dotenv.config({ path: '../.env' });
 
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI);
 
 mongoose.connection.on('connected', () => {
     console.log(
