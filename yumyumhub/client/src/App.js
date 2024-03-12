@@ -11,18 +11,12 @@ import UserProfile from "./pages/UserProfile";
 import "./App.css"; // Import the CSS file
 
 const App = () => {
-  // Mock user data
-  const user = {
-    id: 1,
-    username: "exampleUser",
-    // other user details
-    image: "path_to_user_image",
-  };
+  
 
   return (
     <Router>
       <div className="app">
-        <Sidebar userImage={user.image} />
+        <Sidebar  />
         <div className="content">
           <Routes>
             <Route path="/user-profile" element={<UserProfile />} />

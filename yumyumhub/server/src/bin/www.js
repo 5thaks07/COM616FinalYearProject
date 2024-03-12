@@ -1,37 +1,46 @@
+import dotenv from 'dotenv';
 import { createServer } from 'http';
-
-import {} from 'dotenv/config';
-
+import mongoose from 'mongoose';
+import chalk from 'chalk';
 import app from '../app.js';
 
-// connect to db
+// Specify the path to your .env file in the root folder
+dotenv.config({ path: '../.env' });
 
-// create server
-const server = createServer(app);
-server.listen(3000);
-console.log('Server listening on port 3000');
 
-//////////////
-// SHUTDOWN //
-//////////////
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI);
 
-// handle DB disconnect
-
-// shutdown server
-const gracefulShutdown = () => {
-    server.close(async () => {
-        console.log('Server closed');
-        process.exit(0);
-    });
-};
-
-// handle shutdown message
-process.on('SIGTERM', () => {
-    console.log('SIGTERM received');
-    gracefulShutdown();
+mongoose.connection.on('connected', () => {
+    console.log(
+        'MongoDB connection established successfully',
+        chalk.green('✓')
+    );
 });
 
-process.on('SIGINT', () => {
-    console.log('SIGINT received');
-    gracefulShutdown();
+mongoose.connection.on('error', (err) => {
+    console.error(err);
+    console.log(
+        'MongoDB connection error. Please make sure MongoDB is running.',
+        chalk.red('✗')
+    );
+    process.exit();
+});
+
+// Start the server
+const server = createServer(app);
+
+server.listen(5000, () => {
+    console.log('Server is running on port 5000');
+});
+
+// Handle shutdown gracefully
+process.on('SIGTERM', () => {
+    // stop HTTP server
+    server.close(() => {
+        console.log('Process terminated');
+    });
+
+    // close DB connection
+    mongoose.connection.close();
 });
