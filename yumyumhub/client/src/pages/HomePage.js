@@ -2,65 +2,88 @@ import React from "react";
 import RecipeCard from "../components/RecipeCard";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import TestImage from "../assests/daylily-flower-and-buds-blur2.jpg";
 
 function RecipeList() {
   const recipes = [
     {
       id: 1,
-      image: "pasta.jpg",
-      title: "Delicious Pasta",
-      description:
+      name: "Delicious Pasta",
+      type: "Pasta",
+      shortDescription:
         "A simple and tasty pasta recipe that you can make in under 30 minutes.",
-      score: 8.8,
-      duration: "30 mins",
+      ingredients: "Pasta, Sauce, Cheese, Olive Oil, Salt, Pepper",
+      servings: 2,
+      time: "30 mins",
+      likes: 20,
+      rating: 4.5,
+      images: [TestImage],
     },
-    // Add more recipes as needed
+
     {
       id: 2,
-      image: "burger.jpg",
-      title: "Classic Burger",
-      description:
+      name: "Classic Burger",
+      type: "Burger",
+      shortDescription:
         "The all-time favorite classic burger with a juicy patty and fresh veggies.",
-      score: 9.0,
-      duration: "20 mins",
+      ingredients: "Beef Patty, Buns, Lettuce, Tomato, Onion, Ketchup, Mustard",
+      servings: 1,
+      time: "20 mins",
+      likes: 15,
+      rating: 4.8,
+      images: ["burger.jpg"],
     },
     {
       id: 3,
-      image: "salad.jpg",
-      title: "Fresh Salad",
-      description:
+      name: "Fresh Salad",
+      type: "Salad",
+      shortDescription:
         "A healthy and refreshing salad with a mix of greens, tomatoes, and dressing.",
-      score: 8.5,
-      duration: "15 mins",
+      ingredients: "Lettuce, Tomatoes, Cucumbers, Dressing",
+      servings: 4,
+      time: "15 mins",
+      likes: 25,
+      rating: 4.2,
+      images: ["salad.jpg"],
     },
-    // Repeat the recipes to demonstrate the scrolling effect
-    // Add more recipes as needed
     {
       id: 4,
-      image: "pasta.jpg",
-      title: "Delicious Pasta",
-      description:
+      name: "Delicious Pasta",
+      type: "Pasta",
+      shortDescription:
         "A simple and tasty pasta recipe that you can make in under 30 minutes.",
-      score: 8.8,
-      duration: "30 mins",
+      ingredients: "Pasta, Sauce, Cheese, Olive Oil, Salt, Pepper",
+      servings: 2,
+      time: "30 mins",
+      likes: 20,
+      rating: 4.5,
+      images: ["pasta.jpg"],
     },
     {
       id: 5,
-      image: "burger.jpg",
-      title: "Classic Burger",
-      description:
+      name: "Classic Burger",
+      type: "Burger",
+      shortDescription:
         "The all-time favorite classic burger with a juicy patty and fresh veggies.",
-      score: 9.0,
-      duration: "20 mins",
+      ingredients: "Beef Patty, Buns, Lettuce, Tomato, Onion, Ketchup, Mustard",
+      servings: 1,
+      time: "20 mins",
+      likes: 15,
+      rating: 4.8,
+      images: ["burger.jpg"],
     },
     {
       id: 6,
-      image: "salad.jpg",
-      title: "Fresh Salad",
-      description:
+      name: "Fresh Salad",
+      type: "Salad",
+      shortDescription:
         "A healthy and refreshing salad with a mix of greens, tomatoes, and dressing.",
-      score: 8.5,
-      duration: "15 mins",
+      ingredients: "Lettuce, Tomatoes, Cucumbers, Dressing",
+      servings: 4,
+      time: "15 mins",
+      likes: 25,
+      rating: 4.2,
+      images: ["salad.jpg"],
     },
   ];
 
@@ -71,7 +94,9 @@ function RecipeList() {
         <section className="jumbotron text-center">
           <div className="container">
             <h1>The Largest Collection of Recipes in the World</h1>
-            <p className="lead text-muted">Search, Explore, Upload and Enjoy.</p>
+            <p className="lead text-muted">
+              Search, Explore, Upload and Enjoy.
+            </p>
             <h2>Discover Recipes From All Over The World</h2>
           </div>
         </section>
