@@ -7,8 +7,16 @@ const router = Router();
 router.post('/login', UserController.login);
 router.post('/register', UserController.create);
 
-router.get('/logout', UserController.logout);
+router.get(
+  '/logout',
+  passport.authenticate('jwt', { session: false }),
+  UserController.logout
+);
 
-router.delete('/deleteUser', UserController.deleteUser);
+router.delete(
+  '/deleteUser',
+  passport.authenticate('jwt', { session: false }),
+  UserController.deleteUser
+);
 
 export default router;
