@@ -1,18 +1,14 @@
 import { Router } from 'express';
-import {
-  noAuthAPI,
-  stdAuthAPI,
-  adminAuthAPI,
-} from '../middlewares/user.middleware.js';
+
 import * as UserController from '../controllers/user.controller.js';
 
 const router = Router();
 
-router.post('/login', noAuthAPI, UserController.login);
-router.post('/register', noAuthAPI, UserController.create);
+router.post('/login', UserController.login);
+router.post('/register', UserController.create);
 
-router.get('/logout', stdAuthAPI, UserController.logout);
+router.get('/logout', UserController.logout);
 
-router.delete('/deleteUser', stdAuthAPI, UserController.deleteUser);
+router.delete('/deleteUser', UserController.deleteUser);
 
 export default router;

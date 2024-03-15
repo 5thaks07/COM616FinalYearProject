@@ -23,11 +23,6 @@ export const login = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
-    // Set the auth token as a cookie
-    res.cookie('token', token);
-    // save token to user document
-    user.token = token;
-    await user.save();
 
     // return token to client
     return res.status(200).json({
@@ -70,12 +65,6 @@ export const create = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
-    // Set the auth token as a cookie
-    res.cookie('token', token);
-
-    // save token to user document
-    user.token = token;
-    await user.save();
 
     // return token to client
     return res.status(201).json({
@@ -100,11 +89,6 @@ export const logout = async (req, res) => {
 
     // find user
     const user = await User.findById(decoded.id);
-
-    // remove token
-    user.token = '';
-    res.clearCookie('token');
-    await user.save();
 
     // return success message
     return res.status(200).json({
@@ -149,8 +133,7 @@ export const deleteUser = async (req, res) => {
     // only allow users to delete their own account
 
     await User.findByIdAndRemove(user._id);
-    user.token = '';
-    res.clearCookie('token');
+
     return res.status(200).json({
       message: 'User Deleted successfully',
       redirect: '/login',
@@ -162,4 +145,3 @@ export const deleteUser = async (req, res) => {
     });
   }
 };
-
