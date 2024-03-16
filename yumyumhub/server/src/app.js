@@ -7,14 +7,13 @@ import UserRouter from './routes/user.route.js';
 import RecipeRouter from './routes/recipe.route.js';
 
 import passport from 'passport';
+import('./config/passport.js');
 
 const app = express();
 
 app.use(cors());
 app.use(helmet());
 app.use(passport.initialize());
-
-require('./config/passport.js');
 
 app.use(express.static('src/public'));
 app.use(cookieParser());
