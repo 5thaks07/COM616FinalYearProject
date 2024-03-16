@@ -5,12 +5,15 @@ import cookieParser from 'cookie-parser';
 
 import UserRouter from './routes/user.route.js';
 import RecipeRouter from './routes/recipe.route.js';
-import HealthRouter from './routes/health.router.js';
+
+import passport from 'passport';
+import('./config/passport.js');
 
 const app = express();
 
 app.use(cors());
 app.use(helmet());
+app.use(passport.initialize());
 
 app.use(express.static('src/public'));
 app.use(cookieParser());
@@ -20,6 +23,5 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/user', UserRouter);
 app.use('/recipe', RecipeRouter);
-app.use('/health', HealthRouter);
 
 export default app;

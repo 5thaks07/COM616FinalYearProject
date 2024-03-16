@@ -1,18 +1,23 @@
 import { Router } from 'express';
-import {
-  noAuthAPI,
-  stdAuthAPI,
-  adminAuthAPI,
-} from '../middlewares/user.middleware.js';
+import passport from 'passport';
+
 import * as UserController from '../controllers/user.controller.js';
 
 const router = Router();
 
-router.post('/login', noAuthAPI, UserController.login);
-router.post('/register', noAuthAPI, UserController.create);
+router.post('/login', UserController.login);
+router.post('/register', UserController.create);
 
-router.get('/logout', stdAuthAPI, UserController.logout);
+router.get(
+  '/logout',
+  passport.authenticate('jwt', { session: false }),
+  UserController.logout
+);
 
-router.delete('/deleteUser', stdAuthAPI, UserController.deleteUser);
+router.delete(
+  '/deleteUser',
+  passport.authenticate('jwt', { session: false }),
+  UserController.deleteUser
+);
 
 export default router;
