@@ -11,12 +11,10 @@ import UserProfile from "./pages/UserProfile";
 import "./App.css"; // Import the CSS file
 
 const App = () => {
-  
-
   return (
     <Router>
       <div className="app">
-        <Sidebar  />
+        <Sidebar />
         <div className="content">
           <Routes>
             <Route path="/user-profile" element={<UserProfile />} />
