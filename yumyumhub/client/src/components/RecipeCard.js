@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const RecipeCard = ({ recipe }) => {
   // Check if recipe is defined
@@ -7,8 +8,7 @@ const RecipeCard = ({ recipe }) => {
   }
 
   // Extract details from the recipe prop
-  const { name, type, shortDescription, ingredients, servings, time, images } =
-    recipe;
+  const { name, shortDescription, servings, time, likes, images } = recipe;
 
   return (
     <div
@@ -20,10 +20,10 @@ const RecipeCard = ({ recipe }) => {
         marginBottom: "20px",
       }}
     >
-      {/* Assuming the first image in the images array is the main image */}
+      {/* Display only the first image */}
       {images.length > 0 && (
         <img
-          src={images[0]}
+          src={images[0]} // Display the first image
           alt={name}
           style={{
             width: "100%",
@@ -35,11 +35,14 @@ const RecipeCard = ({ recipe }) => {
       )}
       <div style={{ padding: "15px" }}>
         <h3>{name}</h3>
-        <p>Type: {type}</p>
         <p>Description: {shortDescription}</p>
-        <p>Ingredients: {ingredients}</p>
         <p>Servings: {servings}</p>
         <p>Time: {time}</p>
+        <p>Likes: {likes}</p>
+        {/* Add a "Read More" link */}
+        <Link to={`/recipe/${recipe._id}`} style={{ textDecoration: "none" }}>
+          Read More
+        </Link>
       </div>
     </div>
   );
