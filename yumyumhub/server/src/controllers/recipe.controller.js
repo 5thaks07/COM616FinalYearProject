@@ -33,7 +33,7 @@ export const getRecipes = async (req, res) => {
 };
 
 export const createRecipe = async (req, res) => {
-  const userId = res.locals.user._id;
+  const userId = req.user._id;
 
   try {
     const {
@@ -88,7 +88,7 @@ export const createRecipe = async (req, res) => {
 };
 
 export const updateRecipe = async (req, res) => {
-  const userId = res.locals.user._id;
+  const userId = req.user._id;
   const recipeId = req.params.id;
 
   try {
@@ -132,7 +132,7 @@ export const updateRecipe = async (req, res) => {
 };
 
 export const deleteRecipe = async (req, res) => {
-  const userId = res.locals.user._id;
+  const userId = req.user._id;
   const recipeId = req.params.id;
 
   try {

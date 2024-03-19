@@ -66,6 +66,8 @@ export const create = async (req, res) => {
       expiresIn: '1d',
     });
 
+    
+
     // return token to client
     return res.status(201).json({
       message: 'User created successfully',

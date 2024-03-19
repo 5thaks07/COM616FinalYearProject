@@ -1,23 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import RecipeCard from "../components/RecipeCard";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-
 function RecipeList() {
   const [recipes, setRecipes] = useState([]);
+  const [initialRecipes, setInitialRecipes] = useState([]);
 
-  useEffect(() => {
-    // Fetch recipes from your API endpoint
-    fetch("http://localhost:5000/recipe/list")
-      .then((response) => response.json())
-      .then((data) => setRecipes(data))
-      .catch((error) => console.error("Error fetching recipes:", error));
+  // Function to fetch recipes from the API
+  const fetchRecipes = useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:5000/recipe/list");
+      const data = await response.json();
+      setRecipes(data);
+      setInitialRecipes(data);
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+    }
   }, []);
+
+  // Fetch recipes when the component mounts
+  useEffect(() => {
+    fetchRecipes();
+  }, [fetchRecipes]);
+
+  // Function to handle search form submission
+  const handleSearchSubmit = (searchTerm) => {
+    const filteredRecipes = initialRecipes.filter((recipe) =>
+      recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setRecipes(filteredRecipes);
+  };
+
+  // Function to reset the recipes list to the initial list
+  const resetRecipes = () => {
+    setRecipes(initialRecipes);
+  };
 
   return (
     <>
-      <Navbar />
+      <Navbar onSearchSubmit={handleSearchSubmit} onReset={resetRecipes} />
       <main role="main">
         <section className="jumbotron text-center">
           <div className="container">
@@ -33,7 +55,7 @@ function RecipeList() {
           <div className="container">
             <div className="row">
               {recipes.map((recipe) => (
-                <div className="col-md-4" key={recipe.id}>
+                <div className="col-md-4" key={recipe._id}>
                   <RecipeCard recipe={recipe} />
                 </div>
               ))}
