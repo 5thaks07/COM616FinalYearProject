@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const UploadRecipeForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    type: '',
-    shortDescription: '',
-    fullDescription: '',
-    ingredients: '',
-    servings: '',
-    time: '',
+    name: "",
+    type: "",
+    shortDescription: "",
+    fullDescription: "",
+    ingredients: "",
+    servings: "",
+    time: "",
     images: [],
   });
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if the user is logged in by verifying the presence of the token in localStorage
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists, false otherwise
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,11 +35,11 @@ const UploadRecipeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/recipe/create', {
-        method: 'POST',
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:5000/recipe/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
@@ -41,19 +50,30 @@ const UploadRecipeForm = () => {
       }
       // Reset form fields
       setFormData({
-        name: '',
-        type: '',
-        shortDescription: '',
-        fullDescription: '',
-        ingredients: '',
-        servings: '',
-        time: '',
+        name: "",
+        type: "",
+        shortDescription: "",
+        fullDescription: "",
+        ingredients: "",
+        servings: "",
+        time: "",
         images: [],
       });
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="container mt-5 text-center">
+        <p className="fs-4">You must be logged in to upload a recipe.</p>
+        <p className="mb-0">
+          <Link to="/login" className="btn btn-primary">Login</Link>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5">
@@ -143,10 +163,11 @@ const UploadRecipeForm = () => {
             accept="image/*"
             multiple
             onChange={handleImageChange}
-            
           />
         </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
       </form>
     </div>
   );
