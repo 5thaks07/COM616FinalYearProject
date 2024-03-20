@@ -45,7 +45,7 @@ export const createRecipe = async (req, res) => {
       servings,
       time,
     } = req.body;
-
+    console.log(req.body);
     // Check if all required fields are provided
     if (
       !name ||
@@ -56,24 +56,28 @@ export const createRecipe = async (req, res) => {
       !servings ||
       !time
     ) {
-      return res.status(400).json({ message: 'All required fields must be provided' });
+      return res
+        .status(400)
+        .json({ message: 'All required fields must be provided' });
     }
-
+    console.log(req.files);
     // Check if images are uploaded
-    if (!req.files || !req.files.images) {
+    if (!req.files) {
       return res.status(400).json({ message: 'No images uploaded' });
     }
 
-    const images = req.files.images;
- console.log(images);
-    // Move uploaded images to permanent location
-    const imageUrls = [];
-    for (let i = 0; i < images.length; i++) {
-      const fileName = `${name}_${Date.now()}_${i}.${images[i].name.split('.').pop()}`;
-      await images[i].mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
-      imageUrls.push(`${process.env.BASE_URL}/uploads/${fileName}`);
-    }
-
+   // Get the images from the request
+const images = req.files;
+console.log(images);
+// Move uploaded images to permanent location
+const imageUrls = [];
+Object.keys(images).forEach(async (key) => {
+  const image = images[key];
+  const fileName = `${name}_${Date.now()}_${key}.${image.name.split('.').pop()}`;
+  await image.mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
+  imageUrls.push(`${process.env.BASE_URL}/uploadImages/${fileName}`);
+});
+console.log(imageUrls);
     // Create the recipe with image URLs
     const recipe = await Recipe.create({
       userId,
@@ -86,6 +90,7 @@ export const createRecipe = async (req, res) => {
       time,
       images: imageUrls,
     });
+   console.log(recipe);
 
     return res.status(201).json({
       message: 'Recipe created successfully',
