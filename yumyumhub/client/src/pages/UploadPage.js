@@ -28,26 +28,42 @@ const UploadRecipeForm = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setFormData({ ...formData, images: imageUrls });
+    console.log(files);
+    setFormData({ ...formData, images: files });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
+
+      // Create a new FormData object
+      const formDataWithImages = new FormData();
+
+      // Append all form data fields
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataWithImages.append(key, value);
+      });
+
+      // Append images to FormData
+      formData.images.forEach((image, index) => {
+        formDataWithImages.append(`image_${index}`, image);
+      });
+
+      // Send the form data with images to the server
       const response = await fetch("http://localhost:5000/recipe/create", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: formDataWithImages,
       });
+
       const data = await response.json();
       if (data.message) {
         alert(data.message);
       }
+
       // Reset form fields
       setFormData({
         name: "",
@@ -69,7 +85,9 @@ const UploadRecipeForm = () => {
       <div className="container mt-5 text-center">
         <p className="fs-4">You must be logged in to upload a recipe.</p>
         <p className="mb-0">
-          <Link to="/login" className="btn btn-primary">Login</Link>
+          <Link to="/login" className="btn btn-primary">
+            Login
+          </Link>
         </p>
       </div>
     );
@@ -160,7 +178,7 @@ const UploadRecipeForm = () => {
             type="file"
             className="form-control"
             name="images"
-            accept="image/*"
+            accept=".jpg, .jpeg"
             multiple
             onChange={handleImageChange}
           />

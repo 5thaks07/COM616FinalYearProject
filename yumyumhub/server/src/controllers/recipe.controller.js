@@ -44,7 +44,6 @@ export const createRecipe = async (req, res) => {
       ingredients,
       servings,
       time,
-      images,
     } = req.body;
 
     // Check if all required fields are provided
@@ -57,12 +56,25 @@ export const createRecipe = async (req, res) => {
       !servings ||
       !time
     ) {
-      return res
-        .status(400)
-        .json({ message: 'All required fields must be provided' });
+      return res.status(400).json({ message: 'All required fields must be provided' });
     }
 
-    // Create the recipe
+    // Check if images are uploaded
+    if (!req.files || !req.files.images) {
+      return res.status(400).json({ message: 'No images uploaded' });
+    }
+
+    const images = req.files.images;
+ console.log(images);
+    // Move uploaded images to permanent location
+    const imageUrls = [];
+    for (let i = 0; i < images.length; i++) {
+      const fileName = `${name}_${Date.now()}_${i}.${images[i].name.split('.').pop()}`;
+      await images[i].mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
+      imageUrls.push(`${process.env.BASE_URL}/uploads/${fileName}`);
+    }
+
+    // Create the recipe with image URLs
     const recipe = await Recipe.create({
       userId,
       name,
@@ -72,7 +84,7 @@ export const createRecipe = async (req, res) => {
       ingredients,
       servings,
       time,
-      images,
+      images: imageUrls,
     });
 
     return res.status(201).json({
@@ -81,9 +93,7 @@ export const createRecipe = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      message: 'Internal server error',
-    });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
