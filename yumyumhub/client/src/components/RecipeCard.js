@@ -10,6 +10,7 @@ const RecipeCard = ({ recipe }) => {
   // Extract details from the recipe prop
   const { name, shortDescription, servings, time, likes, images } = recipe;
 
+  console.log(images);
   return (
     <div
       className="recipe-card"
