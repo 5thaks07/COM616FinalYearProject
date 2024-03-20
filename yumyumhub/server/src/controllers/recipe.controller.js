@@ -87,9 +87,7 @@ export const createRecipe = async (req, res) => {
     // Move uploaded images to permanent location and generate image URLs
     const imageUrls = await Promise.all(
       Object.entries(images).map(async ([key, image]) => {
-        const fileName = `${recipeId}_${name}_${key}.${image.name
-          .split('.')
-          .pop()}`;
+        const fileName = `${recipeId}_${key}.${image.name.split('.').pop()}`;
         await image.mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
         return `${process.env.BASE_URL}/uploadImages/${fileName}`;
       })
