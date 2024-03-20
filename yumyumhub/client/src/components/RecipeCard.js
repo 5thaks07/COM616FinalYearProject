@@ -36,7 +36,7 @@ const RecipeCard = ({ recipe }) => {
       )}
       <div style={{ padding: "15px" }}>
         <h3>{name}</h3>
-        <p>Description: {shortDescription}</p>
+        <p>{shortDescription}</p>
         <p>Servings: {servings}</p>
         <p>Time: {time}</p>
         <p>Likes: {likes}</p>
