@@ -66,18 +66,24 @@ export const createRecipe = async (req, res) => {
       return res.status(400).json({ message: 'No images uploaded' });
     }
 
-   // Get the images from the request
-const images = req.files;
-console.log(images);
-// Move uploaded images to permanent location
-const imageUrls = [];
-Object.keys(images).forEach(async (key) => {
-  const image = images[key];
-  const fileName = `${name}_${Date.now()}_${key}.${image.name.split('.').pop()}`;
-  await image.mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
-  imageUrls.push(`${process.env.BASE_URL}/uploadImages/${fileName}`);
-});
-console.log(imageUrls);
+    // Get the images from the request
+    const images = req.files;
+    //console.log(`images are: ${images}`);
+    // Move uploaded images to permanent location
+    const imageUrls = [];
+    Object.keys(images).forEach(async (key) => {
+      const image = images[key];
+      console.log(`Key ${key} image = ${image}`);
+      const fileName = `${name}_${Date.now()}_${key}.${image.name
+        .split('.')
+        .pop()}`;
+      console.log(
+        `base url is ${process.env.BASE_URL} fileName is ${fileName}`
+      );
+      await image.mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
+      imageUrls.push(`${process.env.BASE_URL}/uploadImages/${fileName}`);
+    });
+    console.log(imageUrls);
     // Create the recipe with image URLs
     const recipe = await Recipe.create({
       userId,
@@ -90,7 +96,7 @@ console.log(imageUrls);
       time,
       images: imageUrls,
     });
-   console.log(recipe);
+    console.log(recipe);
 
     return res.status(201).json({
       message: 'Recipe created successfully',

@@ -36,20 +36,20 @@ const UploadRecipeForm = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-  
+
       // Create a new FormData object
       const formDataWithImages = new FormData();
-  
+
       // Append all form data fields
       Object.entries(formData).forEach(([key, value]) => {
         formDataWithImages.append(key, value);
       });
-  
+
       // Append images to FormData
       formData.images.forEach((image, index) => {
         formDataWithImages.append(`image_${index}`, image);
       });
-  
+
       // Send the form data with images to the server
       const response = await fetch("http://localhost:5000/recipe/create", {
         method: "POST",
@@ -58,12 +58,12 @@ const UploadRecipeForm = () => {
         },
         body: formDataWithImages,
       });
-  
+
       const data = await response.json();
       if (data.message) {
         alert(data.message);
       }
-  
+
       // Reset form fields
       setFormData({
         name: "",
@@ -79,7 +79,6 @@ const UploadRecipeForm = () => {
       console.error("Error:", error);
     }
   };
-  
 
   if (!isLoggedIn) {
     return (
