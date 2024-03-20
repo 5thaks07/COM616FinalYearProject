@@ -45,7 +45,7 @@ export const createRecipe = async (req, res) => {
       servings,
       time,
     } = req.body;
-    console.log(req.body);
+
     // Check if all required fields are provided
     if (
       !name ||
@@ -60,7 +60,7 @@ export const createRecipe = async (req, res) => {
         .status(400)
         .json({ message: 'All required fields must be provided' });
     }
-    console.log(req.files);
+
     // Check if images are uploaded
     if (!req.files) {
       return res.status(400).json({ message: 'No images uploaded' });
@@ -68,15 +68,8 @@ export const createRecipe = async (req, res) => {
 
     // Get the images from the request
     const images = req.files;
-    
-    // Move uploaded images to permanent location and generate image URLs
-    const imageUrls = await Promise.all(Object.entries(images).map(async ([key, image]) => {
-      const fileName = `${name}_${Date.now()}_${key}.${image.name.split('.').pop()}`;
-      await image.mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
-      return `${process.env.BASE_URL}/uploadImages/${fileName}`;
-    }));
-    console.log(imageUrls);
-    // Create the recipe with image URLs
+
+    // Create the recipe in the database
     const recipe = await Recipe.create({
       userId,
       name,
@@ -86,10 +79,26 @@ export const createRecipe = async (req, res) => {
       ingredients,
       servings,
       time,
-      images: imageUrls,
     });
-    console.log(recipe);
 
+    // Extract the generated recipe ID from the recipe object
+    const { _id: recipeId } = recipe;
+
+    // Move uploaded images to permanent location and generate image URLs
+    const imageUrls = await Promise.all(
+      Object.entries(images).map(async ([key, image]) => {
+        const fileName = `${recipeId}_${name}_${key}.${image.name
+          .split('.')
+          .pop()}`;
+        await image.mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
+        return `${process.env.BASE_URL}/uploadImages/${fileName}`;
+      })
+    );
+
+    // Update the recipe with image URLs
+    await Recipe.findByIdAndUpdate(recipeId, { images: imageUrls });
+
+    // Return the response with the created recipe
     return res.status(201).json({
       message: 'Recipe created successfully',
       recipe,
