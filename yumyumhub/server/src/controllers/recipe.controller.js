@@ -68,21 +68,13 @@ export const createRecipe = async (req, res) => {
 
     // Get the images from the request
     const images = req.files;
-    //console.log(`images are: ${images}`);
-    // Move uploaded images to permanent location
-    const imageUrls = [];
-    Object.keys(images).forEach(async (key) => {
-      const image = images[key];
-      console.log(`Key ${key} image = ${image}`);
-      const fileName = `${name}_${Date.now()}_${key}.${image.name
-        .split('.')
-        .pop()}`;
-      console.log(
-        `base url is ${process.env.BASE_URL} fileName is ${fileName}`
-      );
+    
+    // Move uploaded images to permanent location and generate image URLs
+    const imageUrls = await Promise.all(Object.entries(images).map(async ([key, image]) => {
+      const fileName = `${name}_${Date.now()}_${key}.${image.name.split('.').pop()}`;
       await image.mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
-      imageUrls.push(`${process.env.BASE_URL}/uploadImages/${fileName}`);
-    });
+      return `${process.env.BASE_URL}/uploadImages/${fileName}`;
+    }));
     console.log(imageUrls);
     // Create the recipe with image URLs
     const recipe = await Recipe.create({
