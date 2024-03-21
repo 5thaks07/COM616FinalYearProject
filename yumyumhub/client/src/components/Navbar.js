@@ -23,7 +23,7 @@ const Navbar = ({ onSearchSubmit }) => {
           <input
             className="form-control me-2"
             type="search"
-            placeholder="Search"
+            placeholder="Search by recipe name"
             aria-label="Search"
             value={searchTerm}
             onChange={handleSearchChange}
