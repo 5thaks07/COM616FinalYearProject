@@ -21,5 +21,5 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   RecipeController.deleteRecipe
 );
-
+router.put('/like/:id', passport.authenticate('jwt', { session: false }), RecipeController.likeRecipe);
 export default router;

@@ -11,8 +11,8 @@ const recipeSchema = new Schema(
     servings: { type: Number, required: true },
     time: { type: String, required: true },
     likes: { type: Number, default: 0 },
-    rating: { type: Number, default: 0 },
     images: [{ type: String }],
+    likedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   { timestamps: true }
 );

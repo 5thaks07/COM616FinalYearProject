@@ -47,7 +47,9 @@ function RecipeList() {
         <section className="jumbotron text-center">
           <div className="container">
             <h1>The Largest Collection of Recipes in the World</h1>
-            <p className="lead text-muted">Search, Explore, Upload and Enjoy.</p>
+            <p className="lead text-muted">
+              Search, Explore, Upload and Enjoy.
+            </p>
             <h2>Discover Recipes From All Over The World</h2>
           </div>
         </section>

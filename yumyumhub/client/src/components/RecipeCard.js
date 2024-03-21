@@ -1,40 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, Button } from "react-bootstrap";
 
 const RecipeCard = ({ recipe }) => {
-  // Check if recipe is defined
-  if (!recipe) {
-    return null; // or handle it in some way
-  }
+  const [liked, setLiked] = useState(false);
 
-  // Extract details from the recipe prop
-  const { name, shortDescription, servings, time, likes, images } = recipe;
+  const handleLike = async () => {
+    // Send a request to the backend to like the recipe
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:5000/recipe/like/${recipe._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        // If the like was successful, update the UI
+        setLiked(true);
+        // You can also update the like count in the UI
+      } else {
+        console.error("Failed to like the recipe");
+        response.json().then((data) => alert(data.message));
+      }
+    } catch (error) {
+      console.error("Error liking the recipe:", error);
+    }
+  };
 
   return (
     <Card style={{ marginBottom: "20px" }}>
       {/* Display only the first image */}
-      {images.length > 0 && (
-        <Card.Img
-          variant="top"
-          src={images[0]} // Display the first image
-          alt={name}
-        />
+      {recipe.images.length > 0 && (
+        <Card.Img variant="top" src={recipe.images[0]} alt={recipe.name} />
       )}
       <Card.Body>
-        <Card.Title>{name}</Card.Title>
-        <Card.Text>{shortDescription}</Card.Text>
+        <Card.Title>{recipe.name}</Card.Title>
+        <Card.Text>{recipe.shortDescription}</Card.Text>
         <Card.Text>
-          <strong>Servings:</strong> {servings}
+          <strong>Servings:</strong> {recipe.servings}
         </Card.Text>
         <Card.Text>
-          <strong>Time:</strong> {time}
+          <strong>Time:</strong> {recipe.time}
         </Card.Text>
         <Card.Text>
-          <strong>Likes:</strong> {likes}
+          <strong>Likes:</strong> {recipe.likes}
         </Card.Text>
+        {!liked && (
+          <Button variant="primary" onClick={handleLike}>
+            Like
+          </Button>
+        )}
         <Link to={`/recipe/${recipe._id}`} style={{ textDecoration: "none" }}>
-          <Button variant="primary">Read More</Button>
+          <Button variant="secondary" style={{ marginLeft: "10px" }}>
+            Read More
+          </Button>
         </Link>
       </Card.Body>
     </Card>

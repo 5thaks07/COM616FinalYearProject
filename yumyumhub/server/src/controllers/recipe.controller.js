@@ -189,3 +189,46 @@ export const deleteRecipe = async (req, res) => {
     });
   }
 };
+
+export const likeRecipe = async (req, res) => {
+  const userId = req.user._id;
+  const recipeId = req.params.id;
+
+  try {
+    // Check if recipe ID is valid
+    if (!mongoose.Types.ObjectId.isValid(recipeId)) {
+      return res.status(400).json({ message: 'Invalid recipe ID' });
+    }
+
+    // Find the recipe
+    const recipe = await Recipe.findById(recipeId);
+
+    // Check if the recipe exists
+    if (!recipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    // Check if the user has already liked the recipe
+    if (recipe.likedBy.includes(userId)) {
+      return res.status(400).json({ message: 'You have already liked this recipe' });
+    }
+
+    // Add the user ID to the likedBy array
+    recipe.likedBy.push(userId);
+
+    // Increment the likes count
+    recipe.likes += 1;
+
+    // Save the updated recipe
+    await recipe.save();
+
+    return res.status(200).json({
+      message: 'Recipe liked successfully',
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
