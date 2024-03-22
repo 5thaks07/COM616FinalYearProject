@@ -6,6 +6,7 @@ import passport from 'passport';
 const router = Router();
 
 router.get('/list', RecipeController.getRecipes);
+router.get('/detail/:id', RecipeController.getRecipeDetailById);
 router.post(
   '/create',
   passport.authenticate('jwt', { session: false }),

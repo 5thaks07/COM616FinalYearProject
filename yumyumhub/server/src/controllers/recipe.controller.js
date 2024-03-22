@@ -1,4 +1,5 @@
 import { Recipe } from '../models/Recipe.js';
+import { User } from '../models/User.js';
 import mongoose from 'mongoose';
 
 export const getRecipes = async (req, res) => {
@@ -225,6 +226,39 @@ export const likeRecipe = async (req, res) => {
     return res.status(200).json({
       message: 'Recipe liked successfully',
     });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const getRecipeDetailById = async (req, res) => {
+  const  recipeId  = req.params.id;
+
+  try {
+    // Check if recipe ID is valid
+    if (!mongoose.Types.ObjectId.isValid(recipeId)) {
+      return res.status(400).json({ message: 'Invalid recipe ID' });
+    }
+
+    // Find the recipe by ID
+    const recipe = await Recipe.findById(recipeId);
+
+    // Check if the recipe exists
+    if (!recipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    // Find the user who uploaded the recipe
+    const user = await User.findById(recipe.userId);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Send back the user and recipe information
+    return res.json({ user, recipe });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });

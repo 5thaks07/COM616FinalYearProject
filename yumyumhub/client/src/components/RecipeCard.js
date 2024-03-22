@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const RecipeCard = ({ recipe }) => {
   const [liked, setLiked] = useState(false);
@@ -9,13 +9,16 @@ const RecipeCard = ({ recipe }) => {
     // Send a request to the backend to like the recipe
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/recipe/like/${recipe._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/recipe/like/${recipe._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.ok) {
         // If the like was successful, update the UI
         setLiked(true);
@@ -52,7 +55,10 @@ const RecipeCard = ({ recipe }) => {
             Like
           </Button>
         )}
-        <Link to={`/recipe/${recipe._id}`} style={{ textDecoration: "none" }}>
+        <Link
+          to={`/recipe/detail/${recipe._id}`}
+          style={{ textDecoration: "none" }}
+        >
           <Button variant="secondary" style={{ marginLeft: "10px" }}>
             Read More
           </Button>

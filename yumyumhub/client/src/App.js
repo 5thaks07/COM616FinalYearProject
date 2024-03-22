@@ -8,6 +8,8 @@ import RegisterPage from "./pages/RegisterPage";
 import UploadPage from "./pages/UploadPage";
 import SavedRecipes from "./pages/SavedRecipes";
 import UserProfile from "./pages/UserProfile";
+import ReadMorePage from "./pages/ReadMorePage";
+
 import "./App.css"; // Import the CSS file
 
 const App = () => {
@@ -24,6 +26,7 @@ const App = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/saved-recipes" element={<SavedRecipes />} />
+            <Route path="/recipe/detail/:id" element={<ReadMorePage />} />
           </Routes>
         </div>
       </div>
