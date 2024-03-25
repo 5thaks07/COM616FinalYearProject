@@ -97,6 +97,11 @@ export const createRecipe = async (req, res) => {
     // Update the recipe with image URLs
     await Recipe.findByIdAndUpdate(recipeId, { images: imageUrls });
 
+    // Find the user who uploaded the recipe and add the recipe ID to the user's uploadedRecipes array
+    await User.findByIdAndUpdate
+    (userId, { $push: { uploadedRecipes: recipeId } });
+
+
     // Return the response with the created recipe
     return res.status(201).json({
       message: 'Recipe created successfully',

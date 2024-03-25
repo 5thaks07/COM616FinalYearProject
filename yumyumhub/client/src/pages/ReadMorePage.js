@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 const ReadMorePage = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // useNavigate hook for navigation
+
   const [recipe, setRecipe] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -10,16 +13,18 @@ const ReadMorePage = () => {
   useEffect(() => {
     const fetchRecipeDetail = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/recipe/detail/${id}`);
+        const response = await fetch(
+          `http://localhost:5000/recipe/detail/${id}`
+        );
         const data = await response.json();
         if (response.ok) {
           setRecipe(data.recipe);
           setUser(data.user);
         } else {
-          console.error('Failed to fetch recipe detail:', data.message);
+          console.error("Failed to fetch recipe detail:", data.message);
         }
       } catch (error) {
-        console.error('Error fetching recipe detail:', error);
+        console.error("Error fetching recipe detail:", error);
       } finally {
         setLoading(false);
       }
@@ -27,6 +32,18 @@ const ReadMorePage = () => {
 
     fetchRecipeDetail();
   }, [id]);
+
+  const goToUserProfile = () => {
+    if (user) {
+      // Redirect to the user profile page using navigate
+      navigate(`/user-profile/${user._id}`);
+    }
+  };
+
+  const handleSaveRecipe = () => {
+    // Logic to save the recipe
+    console.log("Recipe saved!");
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -54,12 +71,31 @@ const ReadMorePage = () => {
                 ))}
               </div>
               <h1 className="card-title">{recipe.name}</h1>
-              <p><strong>Short Description:</strong> {recipe.shortDescription}</p>
-              <p><strong>Full Description:</strong> {recipe.fullDescription}</p>
-              <p><strong>Ingredients:</strong> {recipe.ingredients}</p>
-              <p><strong>Servings:</strong> {recipe.servings}</p>
-              <p><strong>Time:</strong> {recipe.time}</p>
-              {user && <p><strong>Uploaded by:</strong> {user.name}</p>}
+              <p className="card-text">{recipe.shortDescription}</p>
+              <div className="mb-3">
+                Uploaded by -{" "}
+                <Button variant="primary" onClick={goToUserProfile}>
+                  {user ? user.name : "Unknown"}
+                </Button>
+              </div>
+              <div className="mb-3">
+                <Button variant="success" onClick={handleSaveRecipe}>
+                  Save Recipe
+                </Button>
+              </div>
+              <hr />
+              <p>
+                <strong>Full Description:</strong> {recipe.fullDescription}
+              </p>
+              <p>
+                <strong>Ingredients:</strong> {recipe.ingredients}
+              </p>
+              <p>
+                <strong>Servings:</strong> {recipe.servings}
+              </p>
+              <p>
+                <strong>Time:</strong> {recipe.time}
+              </p>
             </div>
           </div>
         </div>

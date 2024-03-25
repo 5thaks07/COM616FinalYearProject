@@ -3,6 +3,37 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 
+export const getUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Check if the user ID is valid
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // count the number of recipes uploaded by the user
+    const uploadedRecipesCount = user.uploadedRecipes.length;
+
+    // Send back the found user
+    return res.json({
+      name: user.name,
+      email: user.email,
+      uploadedRecipesCount: uploadedRecipesCount,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 export const login = async (req, res) => {
   try {
     // check if all fields are provided
@@ -65,8 +96,6 @@ export const create = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
-
-    
 
     // return token to client
     return res.status(201).json({

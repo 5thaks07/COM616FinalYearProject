@@ -11,6 +11,8 @@ const userSchema = new Schema(
         password: { type: String, required: [true, 'password is required'] },
         admin: { type: Boolean, default: false },
         token: { type: String },
+        uploadedRecipes: [{ type: Schema.Types.ObjectId, ref: 'Recipe' }],
+        savedRecipes: [{ type: Schema.Types.ObjectId, ref: 'Recipe' }]
     },
     { timestamps: true }
 );
