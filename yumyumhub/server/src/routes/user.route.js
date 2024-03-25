@@ -11,6 +11,12 @@ router.post('/register', UserController.create);
 router.get('/:id', UserController.getUser);
 
 router.get(
+  '/savedrecipes',
+  passport.authenticate('jwt', { session: false }),
+  UserController.getSavedRecipes
+);
+
+router.get(
   '/logout',
   passport.authenticate('jwt', { session: false }),
   UserController.logout

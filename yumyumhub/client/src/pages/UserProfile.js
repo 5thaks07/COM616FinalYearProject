@@ -6,27 +6,29 @@ const UserProfile = () => {
 
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/user/logout', {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:5000/user/logout", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const data = await response.json();
-      localStorage.removeItem('token');
-      if (data.message) {
+      localStorage.removeItem("token");
+      if (response.ok) {
         alert(data.message);
         // Redirect to login page after successful logout
-        navigate('/login');
+        navigate("/login");
+      } else {
+        alert(data.message);
       }
     } catch (error) {
       console.error(error);
-      alert('Failed to logout User');
+      alert("Failed to logout User");
     }
   };
 
   // Check if the user is logged in based on the presence of a token in localStorage
-  const isLoggedIn = localStorage.getItem('token') !== null;
+  const isLoggedIn = localStorage.getItem("token") !== null;
 
   return (
     <div>

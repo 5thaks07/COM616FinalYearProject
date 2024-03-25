@@ -271,7 +271,6 @@ export const getRecipeDetailById = async (req, res) => {
 };
 
 export const saveRecipe = async (req, res) => { 
-  const userId = req.user._id;
   const recipeId = req.params.id;
 
   try {
