@@ -9,7 +9,6 @@ const UserProfilePage = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        console.log("Fetching user profile... with id:", id);
         const response = await fetch(`http://localhost:5000/user/${id}`);
         const data = await response.json();
 

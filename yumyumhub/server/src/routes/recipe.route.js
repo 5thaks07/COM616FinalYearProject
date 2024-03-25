@@ -13,6 +13,11 @@ router.post(
   RecipeController.createRecipe
 );
 router.put(
+  '/save/:id',
+  passport.authenticate('jwt', { session: false }),
+  RecipeController.saveRecipe
+);
+router.put(
   '/update/:id',
   passport.authenticate('jwt', { session: false }),
   RecipeController.updateRecipe

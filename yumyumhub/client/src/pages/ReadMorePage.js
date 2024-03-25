@@ -33,10 +33,30 @@ const ReadMorePage = () => {
   }, [id]);
 
   const handleSaveRecipe = () => {
-    // Logic to save the recipe
-    console.log("Recipe saved!");
+    // Send a request to the backend to save the recipe
+    try {
+      const token = localStorage.getItem("token");
+      fetch(`http://localhost:5000/recipe/save/${id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((response) => {
+        if (response.ok) {
+          alert("Recipe saved successfully");
+        } else if (response.status === 401) {
+          console.error("Failed to save the recipe: Unauthorized");
+          alert("Please login to save the recipe");
+        } else {
+          console.error("Failed to save the recipe");
+          response.json().then((data) => alert(data.message));
+        }
+      });
+    } catch (error) {
+      console.error("Error saving the recipe:", error);
+    }
   };
-
+  
   if (loading) {
     return <p>Loading...</p>;
   }
