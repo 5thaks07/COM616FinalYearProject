@@ -11,10 +11,10 @@ const UserProfilePage = () => {
       try {
         console.log("Fetching user profile... with id:", id);
         const response = await fetch(`http://localhost:5000/user/${id}`);
-
         const data = await response.json();
+
         if (response.ok) {
-          setUser(data.user);
+          setUser(data);
         } else {
           console.error("Failed to fetch user profile:", data.message);
         }
@@ -37,11 +37,25 @@ const UserProfilePage = () => {
   }
 
   return (
-    <div>
-      <h1>User Profile</h1>
-      <p>Name: {user.name}</p>
-      <p>Email: {user.email}</p>
-      {/* Add more user details as needed */}
+    <div className="container mt-5">
+      <div className="card">
+        <div className="card-body">
+          <h1 className="card-title">User Profile</h1>
+          <ul className="list-group">
+            <li className="list-group-item">
+              <strong>Name:</strong> {user.name}
+            </li>
+            <li className="list-group-item">
+              <strong>Email:</strong> {user.email}
+            </li>
+            <li className="list-group-item">
+              <strong>Uploaded Recipes Count:</strong>{" "}
+              {user.uploadedRecipesCount}
+            </li>
+          </ul>
+          {/* Add more user details as needed */}
+        </div>
+      </div>
     </div>
   );
 };

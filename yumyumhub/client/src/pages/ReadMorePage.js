@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom"; // Import Link
 import { Button } from "react-bootstrap";
 
 const ReadMorePage = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // useNavigate hook for navigation
 
   const [recipe, setRecipe] = useState(null);
   const [user, setUser] = useState(null);
@@ -32,13 +31,6 @@ const ReadMorePage = () => {
 
     fetchRecipeDetail();
   }, [id]);
-
-  const goToUserProfile = () => {
-    if (user) {
-      // Redirect to the user profile page using navigate
-      navigate(`/user-profile/${user._id}`);
-    }
-  };
 
   const handleSaveRecipe = () => {
     // Logic to save the recipe
@@ -74,9 +66,11 @@ const ReadMorePage = () => {
               <p className="card-text">{recipe.shortDescription}</p>
               <div className="mb-3">
                 Uploaded by -{" "}
-                <Button variant="primary" onClick={goToUserProfile}>
-                  {user ? user.name : "Unknown"}
-                </Button>
+                <Link to={`/user-profile/${user._id}`}>
+                  <Button variant="primary">
+                    {user ? user.name : "Unknown"}
+                  </Button>
+                </Link>
               </div>
               <div className="mb-3">
                 <Button variant="success" onClick={handleSaveRecipe}>
