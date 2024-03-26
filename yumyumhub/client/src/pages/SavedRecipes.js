@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import RecipeCard from "../components/RecipeCard";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const SavedRecipes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -8,7 +8,7 @@ const SavedRecipes = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       // User is logged in
       setIsLoggedIn(true);
@@ -27,7 +27,13 @@ const SavedRecipes = () => {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        setSavedRecipes(data.savedRecipes);
+        // Check if data.savedRecipes is an array
+        if (Array.isArray(data.savedRecipes)) {
+          setSavedRecipes(data.savedRecipes);
+          console.log(data.savedRecipes);
+        } else {
+          console.error('Invalid savedRecipes data:', data.savedRecipes);
+        }
       } else {
         console.error('Failed to fetch saved recipes:', data.message);
       }
@@ -37,8 +43,9 @@ const SavedRecipes = () => {
       setLoading(false);
     }
   };
-
+  
   return (
+    
     <div>
       {isLoggedIn ? (
         <div>

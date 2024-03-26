@@ -56,8 +56,6 @@ export const login = async (req, res) => {
       expiresIn: '1d',
     });
 
-    console.log("Generated Token:", token);
-
     // return token to client
     return res.status(200).json({
       message: 'Login successful',
@@ -118,17 +116,11 @@ export const logout = async (req, res) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
 
-    console.log("Token:", token);
-
     // decode token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log(decoded);
-    console.log(decoded.id);
-
     // find user
     const user = await User.findById(decoded.id);
-    console.log(user);
 
     // return success message
     return res.status(200).json({
@@ -205,15 +197,18 @@ export const getSavedRecipes = async (req, res) => {
     }
 
     // Find the saved recipes
-    const savedRecipes = user.savedRecipes;
-    // lpop through the saved recipes and find the recipe and send it back to the client
-    savedRecipes.forEach(async (recipeId, index) => {
-      const recipe = await Recipe.findById(recipeId);
-      savedRecipes[index] = recipe;
-    });
+    const savedRecipes = user.savedRecipes || [];
+    console.log(savedRecipes);
+
+    // Use Promise.all to wait for all Recipe.findById calls to finish
+    const recipes = await Promise.all(
+      savedRecipes.map(async (recipeId) => {
+        return await Recipe.findById(recipeId);
+      })
+    );
 
     // Send back the saved recipes
-    return res.json({ savedRecipes });
+    return res.json({ savedRecipes: recipes });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });

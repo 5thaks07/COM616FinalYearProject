@@ -9,7 +9,7 @@ const UserProfilePage = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/user/${id}`);
+        const response = await fetch(`http://localhost:5000/user/profile/${id}`);
         const data = await response.json();
 
         if (response.ok) {

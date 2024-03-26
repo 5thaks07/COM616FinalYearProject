@@ -8,7 +8,7 @@ const router = Router();
 router.post('/login', UserController.login);
 router.post('/register', UserController.create);
 
-router.get('/:id', UserController.getUser);
+router.get('/profile/:id', UserController.getUser);
 
 router.get(
   '/savedrecipes',

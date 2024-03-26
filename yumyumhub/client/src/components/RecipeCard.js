@@ -5,6 +5,11 @@ import { Link } from "react-router-dom";
 const RecipeCard = ({ recipe }) => {
   const [liked, setLiked] = useState(false);
 
+  // Ensure recipe object is valid before rendering
+  if (!recipe || typeof recipe !== 'object') {
+    return null; // Return null or render a placeholder component
+  }
+
   const handleLike = async () => {
     // Send a request to the backend to like the recipe
     try {
@@ -37,8 +42,8 @@ const RecipeCard = ({ recipe }) => {
 
   return (
     <Card style={{ marginBottom: "20px" }}>
-      {/* Display only the first image */}
-      {recipe.images.length > 0 && (
+      {/* Display only the first image if it exists */}
+      {recipe.images && recipe.images.length > 0 && (
         <Card.Img variant="top" src={recipe.images[0]} alt={recipe.name} />
       )}
       <Card.Body>
@@ -70,5 +75,6 @@ const RecipeCard = ({ recipe }) => {
     </Card>
   );
 };
+
 
 export default RecipeCard;
