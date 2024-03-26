@@ -230,6 +230,7 @@ export const likeRecipe = async (req, res) => {
 
     return res.status(200).json({
       message: 'Recipe liked successfully',
+      recipe,
     });
   } catch (error) {
     console.error(error);

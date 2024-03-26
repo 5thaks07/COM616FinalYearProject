@@ -27,7 +27,9 @@ const RecipeCard = ({ recipe }) => {
       if (response.ok) {
         // If the like was successful, update the UI
         setLiked(true);
-        // You can also update the like count in the UI
+        //  update the like count in the UI
+        recipe.likes += 1;
+        
       } else if (response.status === 401) {
         console.error("Failed to like the recipe: Unauthorized");
         alert("Please login to like the recipe");
