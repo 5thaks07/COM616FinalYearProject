@@ -6,7 +6,11 @@ import mongoose from 'mongoose';
 
 export const getUser = async (req, res) => {
   try {
-    const userId = req.params.id;
+    // Get the user ID from the request parameters and if there is no ID in the request parameters, get the user ID from the request user object
+    let userId = req.params.id;
+    if (!userId) {
+      userId = req.user._id;
+    }
 
     // Check if the user ID is valid
     if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -23,12 +27,15 @@ export const getUser = async (req, res) => {
 
     // count the number of recipes uploaded by the user
     const uploadedRecipesCount = user.uploadedRecipes.length;
+    // count the number of recipes saved by the user
+    const savedRecipesCount = user.savedRecipes.length;
 
     // Send back the found user
     return res.json({
       name: user.name,
       email: user.email,
       uploadedRecipesCount: uploadedRecipesCount,
+      savedRecipesCount: savedRecipesCount,
     });
   } catch (error) {
     console.error(error);
@@ -211,6 +218,41 @@ export const getSavedRecipes = async (req, res) => {
     return res.json({ savedRecipes: recipes });
   } catch (error) {
     console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    // Check if the password field is not blank
+    if (!password) {
+      return res.status(400).json({ message: 'Password cannot be blank' });
+    }
+
+    let user = req.user;
+
+    // update the user's details
+    if (name) user.name = name;
+    if (email) user.email = email.toLowerCase();
+    if (password) user.password = await bcrypt.hash(password, 10);
+    await user.save();
+
+    // Calculate uploaded recipes count and saved recipes count
+    const uploadedRecipesCount = user.uploadedRecipes.length;
+    const savedRecipesCount = user.savedRecipes.length;
+
+    return res.status(200).json({
+      name: user.name,
+      email: user.email,
+      uploadedRecipesCount: uploadedRecipesCount,
+      savedRecipesCount: savedRecipesCount,
+      updated: true,
+      message: 'User Details Updated successfully',
+      redirect: '/',
+    });
+  } catch (e) {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };

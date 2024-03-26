@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom"; // Import Link
+import { useParams, Link } from "react-router-dom"; 
 import { Button } from "react-bootstrap";
 
 const ReadMorePage = () => {

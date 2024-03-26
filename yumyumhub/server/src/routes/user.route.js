@@ -8,7 +8,11 @@ const router = Router();
 router.post('/login', UserController.login);
 router.post('/register', UserController.create);
 
+// route for getting user profile by id 
 router.get('/profile/:id', UserController.getUser);
+
+// route for getting user profile by token
+router.get('/profile', passport.authenticate('jwt', { session: false }), UserController.getUser);
 
 router.get(
   '/savedrecipes',
@@ -26,6 +30,12 @@ router.delete(
   '/deleteUser',
   passport.authenticate('jwt', { session: false }),
   UserController.deleteUser
+);
+// route for updating user profile
+router.put(
+  '/update',
+  passport.authenticate('jwt', { session: false }),
+  UserController.updateUser
 );
 
 export default router;

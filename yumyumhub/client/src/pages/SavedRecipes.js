@@ -25,12 +25,10 @@ const SavedRecipes = () => {
         },
       });
       const data = await response.json();
-      console.log(data);
       if (response.ok) {
         // Check if data.savedRecipes is an array
         if (Array.isArray(data.savedRecipes)) {
           setSavedRecipes(data.savedRecipes);
-          console.log(data.savedRecipes);
         } else {
           console.error('Invalid savedRecipes data:', data.savedRecipes);
         }
@@ -45,17 +43,16 @@ const SavedRecipes = () => {
   };
   
   return (
-    
-    <div>
+    <div className="container">
       {isLoggedIn ? (
         <div>
-          <h1>Saved Recipes</h1>
+          <h1 className="mb-4">Saved Recipes</h1>
           {loading ? (
             <p>Loading...</p>
           ) : savedRecipes.length > 0 ? (
-            <div className="row">
+            <div className="row row-cols-1 row-cols-md-3 g-4">
               {savedRecipes.map((recipe, index) => (
-                <div key={index} className="col-md-4 mb-3">
+                <div key={index} className="col">
                   <RecipeCard recipe={recipe} />
                 </div>
               ))}
@@ -65,7 +62,7 @@ const SavedRecipes = () => {
           )}
         </div>
       ) : (
-        <div>
+        <div className="text-center">
           <p>You need to be logged in to view saved recipes.</p>
           <p>
             Please <Link to="/login">login</Link> to access your saved recipes.
