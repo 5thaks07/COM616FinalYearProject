@@ -127,7 +127,7 @@ export const logout = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // find user
-    const user = await User.findById(decoded.id);
+    await User.findById(decoded.id);
 
     // return success message
     return res.status(200).json({
@@ -189,7 +189,6 @@ export const getSavedRecipes = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    console.log(userId);
     // Check if the user ID is valid
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: 'Invalid user ID' });
@@ -205,7 +204,6 @@ export const getSavedRecipes = async (req, res) => {
 
     // Find the saved recipes
     const savedRecipes = user.savedRecipes || [];
-    console.log(savedRecipes);
 
     // Use Promise.all to wait for all Recipe.findById calls to finish
     const recipes = await Promise.all(
