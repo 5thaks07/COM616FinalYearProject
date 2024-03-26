@@ -62,12 +62,14 @@ const SavedRecipes = () => {
           )}
         </div>
       ) : (
-        <div className="text-center">
-          <p>You need to be logged in to view saved recipes.</p>
-          <p>
-            Please <Link to="/login">login</Link> to access your saved recipes.
-          </p>
-        </div>
+        <div className="container mt-5 text-center">
+        <p className="fs-4">You must be logged in to access your saved recipes.</p>
+        <p className="mb-0">
+          <Link to="/login" className="btn btn-primary">
+            Login
+          </Link>
+        </p>
+      </div>
       )}
     </div>
   );

@@ -8,7 +8,6 @@ const UserProfile = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -33,7 +32,6 @@ const UserProfile = () => {
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        setError("Failed to fetch user profile. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -51,7 +49,7 @@ const UserProfile = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ name, email, password })   
+        body: JSON.stringify({ name, email, password }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -119,39 +117,77 @@ const UserProfile = () => {
 
   return (
     <div className="container mt-5">
-      <h1>User Profile</h1>
+      
       {loading ? (
         <p>Loading...</p>
-      ) : error ? (
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
       ) : isLoggedIn && userDetails ? (
         <div>
+          <h1 className="mb-4">User Profile</h1>
           <div className="mb-3">
-            <label htmlFor="name" className="form-label">Name</label>
-            <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
           <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <label htmlFor="email" className="form-label">
+              Email address
+            </label>
+            <input
+              type="email"
+              className="form-control"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="mb-3">
-            <label htmlFor="password" className="form-label">Password</label>
-            <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              type="password"
+              className="form-control"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
           <div className="mb-3 d-flex justify-content-between">
-            <button className="btn btn-primary" onClick={handleUpdateUser}>Update</button>
-            <button className="btn btn-danger" onClick={handleDeleteAccount}>Delete Account</button>
-            <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
+            <button className="btn btn-primary" onClick={handleUpdateUser}>
+              Update
+            </button>
+            <button className="btn btn-danger" onClick={handleDeleteAccount}>
+              Delete Account
+            </button>
+            <button className="btn btn-danger" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
-          <p><strong>Uploaded Recipes Count:</strong> {userDetails.uploadedRecipesCount}</p>
-          <p><strong>Saved Recipes Count:</strong> {userDetails.savedRecipesCount}</p>
+          <p>
+            <strong>Uploaded Recipes Count:</strong>{" "}
+            {userDetails.uploadedRecipesCount}
+          </p>
+          <p>
+            <strong>Saved Recipes Count:</strong>{" "}
+            {userDetails.savedRecipesCount}
+          </p>
         </div>
       ) : (
-        <div className="alert alert-info" role="alert">
-          Please <Link to="/login"><strong>Login</strong></Link> to view your profile.
-        </div>
+        <div className="container mt-5 text-center">
+        <p className="fs-4">You must be logged in to view your profile.</p>
+        <p className="mb-0">
+          <Link to="/login" className="btn btn-primary">
+            Login
+          </Link>
+        </p>
+      </div>
       )}
     </div>
   );
