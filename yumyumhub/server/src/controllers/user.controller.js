@@ -56,6 +56,8 @@ export const login = async (req, res) => {
       expiresIn: '1d',
     });
 
+    console.log("Generated Token:", token);
+
     // return token to client
     return res.status(200).json({
       message: 'Login successful',
@@ -115,6 +117,8 @@ export const create = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
+
+    console.log("Token:", token);
 
     // decode token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

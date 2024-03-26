@@ -7,6 +7,7 @@ const UserProfile = () => {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("token");
+      console.log(token);
       const response = await fetch("http://localhost:5000/user/logout", {
         headers: {
           Authorization: `Bearer ${token}`,
