@@ -27,7 +27,7 @@ router.get(
 );
 
 router.delete(
-  '/deleteUser',
+  '/delete',
   passport.authenticate('jwt', { session: false }),
   UserController.deleteUser
 );

@@ -143,7 +143,7 @@ export const logout = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-  const user = res.locals.user;
+  const user = req.user;
   const id = req.query.id;
   try {
     if (id) {
@@ -163,15 +163,15 @@ export const deleteUser = async (req, res) => {
           message: `cannot delete an admin user.`,
         });
       } else {
-        await User.findByIdAndRemove(id);
+        await User.findByIdAndDelete(id);
         return res.status(200).json({
           message: 'User Deleted successfully',
         });
       }
     }
-    // only allow users to delete their own account
 
-    await User.findByIdAndRemove(user._id);
+    // only allow users to delete their own account
+    await User.findByIdAndDelete(user._id);
 
     return res.status(200).json({
       message: 'User Deleted successfully',
