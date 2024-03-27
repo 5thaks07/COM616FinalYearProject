@@ -1,8 +1,47 @@
 import { User } from '../models/User.js';
+import { Recipe } from '../models/Recipe.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 
+export const getUser = async (req, res) => {
+  try {
+    // Get the user ID from the request parameters and if there is no ID in the request parameters, get the user ID from the request user object
+    let userId = req.params.id;
+    if (!userId) {
+      userId = req.user._id;
+    }
+
+    // Check if the user ID is valid
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // count the number of recipes uploaded by the user
+    const uploadedRecipesCount = user.uploadedRecipes.length;
+    // count the number of recipes saved by the user
+    const savedRecipesCount = user.savedRecipes.length;
+
+    // Send back the found user
+    return res.json({
+      name: user.name,
+      email: user.email,
+      uploadedRecipesCount: uploadedRecipesCount,
+      savedRecipesCount: savedRecipesCount,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 export const login = async (req, res) => {
   try {
     // check if all fields are provided
@@ -88,7 +127,7 @@ export const logout = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // find user
-    const user = await User.findById(decoded.id);
+    await User.findById(decoded.id);
 
     // return success message
     return res.status(200).json({
@@ -104,7 +143,7 @@ export const logout = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-  const user = res.locals.user;
+  const user = req.user;
   const id = req.query.id;
   try {
     if (id) {
@@ -124,15 +163,19 @@ export const deleteUser = async (req, res) => {
           message: `cannot delete an admin user.`,
         });
       } else {
-        await User.findByIdAndRemove(id);
+        await User.findByIdAndDelete(id);
         return res.status(200).json({
           message: 'User Deleted successfully',
         });
       }
     }
-    // only allow users to delete their own account
+    // delete all recipes uploaded by the user
+    await Recipe.deleteMany({ userId: user._id });
 
-    await User.findByIdAndRemove(user._id);
+    // remove the recipe ids from the savedRecipes array of all users
+    await User.updateMany({}, { $pull: { savedRecipes: { $in: user.uploadedRecipes } } });
+    // only allow users to delete their own account
+    await User.findByIdAndDelete(user._id);
 
     return res.status(200).json({
       message: 'User Deleted successfully',
@@ -143,5 +186,75 @@ export const deleteUser = async (req, res) => {
     return res.status(500).send({
       message: `could not delete user ${id}.`,
     });
+  }
+};
+
+export const getSavedRecipes = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Check if the user ID is valid
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Find the saved recipes
+    const savedRecipes = user.savedRecipes || [];
+
+    // Use Promise.all to wait for all Recipe.findById calls to finish
+    const recipes = await Promise.all(
+      savedRecipes.map(async (recipeId) => {
+        return await Recipe.findById(recipeId);
+      })
+    );
+
+    // Send back the saved recipes
+    return res.json({ savedRecipes: recipes });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    // Check if the password field is not blank
+    if (!password) {
+      return res.status(400).json({ message: 'Password cannot be blank' });
+    }
+
+    let user = req.user;
+
+    // update the user's details
+    if (name) user.name = name;
+    if (email) user.email = email.toLowerCase();
+    if (password) user.password = await bcrypt.hash(password, 10);
+    await user.save();
+
+    // Calculate uploaded recipes count and saved recipes count
+    const uploadedRecipesCount = user.uploadedRecipes.length;
+    const savedRecipesCount = user.savedRecipes.length;
+
+    return res.status(200).json({
+      name: user.name,
+      email: user.email,
+      uploadedRecipesCount: uploadedRecipesCount,
+      savedRecipesCount: savedRecipesCount,
+      updated: true,
+      message: 'User Details Updated successfully',
+      redirect: '/',
+    });
+  } catch (e) {
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };

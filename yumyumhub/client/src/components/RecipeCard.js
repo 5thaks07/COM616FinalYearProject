@@ -1,48 +1,82 @@
-import React from "react";
+import React, { useState } from "react";
+import { Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const RecipeCard = ({ recipe }) => {
-  // Check if recipe is defined
-  if (!recipe) {
-    return null; // or handle it in some way
+  const [liked, setLiked] = useState(false);
+
+  // Ensure recipe object is valid before rendering
+  if (!recipe || typeof recipe !== 'object') {
+    return null; // Return null or render a placeholder component
   }
 
-  // Extract details from the recipe prop
-  const { name, type, shortDescription, ingredients, servings, time, images } =
-    recipe;
+  const handleLike = async () => {
+    // Send a request to the backend to like the recipe
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:5000/recipe/like/${recipe._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.ok) {
+        // If the like was successful, update the UI
+        setLiked(true);
+        //  update the like count in the UI
+        recipe.likes += 1;
+        
+      } else if (response.status === 401) {
+        console.error("Failed to like the recipe: Unauthorized");
+        alert("Please login to like the recipe");
+      } else {
+        console.error("Failed to like the recipe");
+        response.json().then((data) => alert(data.message));
+      }
+    } catch (error) {
+      console.error("Error liking the recipe:", error);
+    }
+  };
 
   return (
-    <div
-      className="recipe-card"
-      style={{
-        border: "4px solid #ccc",
-        borderRadius: "8px",
-        padding: "15px",
-        marginBottom: "20px",
-      }}
-    >
-      {/* Assuming the first image in the images array is the main image */}
-      {images.length > 0 && (
-        <img
-          src={images[0]}
-          alt={name}
-          style={{
-            width: "100%",
-            height: "200px",
-            objectFit: "cover",
-            borderRadius: "8px 8px 0 0",
-          }}
-        />
+    <Card style={{ marginBottom: "20px" }}>
+      {/* Display only the first image if it exists */}
+      {recipe.images && recipe.images.length > 0 && (
+        <Card.Img variant="top" src={recipe.images[0]} alt={recipe.name} />
       )}
-      <div style={{ padding: "15px" }}>
-        <h3>{name}</h3>
-        <p>Type: {type}</p>
-        <p>Description: {shortDescription}</p>
-        <p>Ingredients: {ingredients}</p>
-        <p>Servings: {servings}</p>
-        <p>Time: {time}</p>
-      </div>
-    </div>
+      <Card.Body>
+        <Card.Title>{recipe.name}</Card.Title>
+        <Card.Text>{recipe.shortDescription}</Card.Text>
+        <Card.Text>
+          <strong>Servings:</strong> {recipe.servings}
+        </Card.Text>
+        <Card.Text>
+          <strong>Time:</strong> {recipe.time}
+        </Card.Text>
+        <Card.Text>
+          <strong>Likes:</strong> {recipe.likes}
+        </Card.Text>
+        {!liked && (
+          <Button variant="primary" onClick={handleLike}>
+            Like
+          </Button>
+        )}
+        <Link
+          to={`/recipe/detail/${recipe._id}`}
+          style={{ textDecoration: "none" }}
+        >
+          <Button variant="secondary" style={{ marginLeft: "10px" }}>
+            Read More
+          </Button>
+        </Link>
+      </Card.Body>
+    </Card>
   );
 };
+
 
 export default RecipeCard;

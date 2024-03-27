@@ -8,7 +8,13 @@ import RegisterPage from "./pages/RegisterPage";
 import UploadPage from "./pages/UploadPage";
 import SavedRecipes from "./pages/SavedRecipes";
 import UserProfile from "./pages/UserProfile";
+import ReadMorePage from "./pages/ReadMorePage";
+import UserProfilePage from "./pages/UserProfilePage";
+import UploadedRecipesPage from "./pages/UploadedRecipesPage";
+import UpdateRecipePage from "./pages/UpdateRecipePage";
 import "./App.css"; // Import the CSS file
+
+
 
 const App = () => {
   return (
@@ -24,6 +30,10 @@ const App = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/saved-recipes" element={<SavedRecipes />} />
+            <Route path="/recipe/detail/:id" element={<ReadMorePage />} />
+            <Route path="/user-profile/:id" element={<UserProfilePage />} />
+            <Route path="/uploaded-recipes" element={<UploadedRecipesPage />} />
+            <Route path="/update-recipe/:id" element={<UpdateRecipePage />} />
           </Routes>
         </div>
       </div>
