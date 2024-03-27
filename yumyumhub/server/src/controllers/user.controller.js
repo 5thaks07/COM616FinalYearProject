@@ -169,7 +169,11 @@ export const deleteUser = async (req, res) => {
         });
       }
     }
+    // delete all recipes uploaded by the user
+    await Recipe.deleteMany({ userId: user._id });
 
+    // remove the recipe ids from the savedRecipes array of all users
+    await User.updateMany({}, { $pull: { savedRecipes: { $in: user.uploadedRecipes } } });
     // only allow users to delete their own account
     await User.findByIdAndDelete(user._id);
 
