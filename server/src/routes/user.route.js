@@ -41,5 +41,10 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   UserController.updateUser
 );
-
+// route for removing a saved recipe
+router.delete(
+  '/savedrecipes/:id',
+  passport.authenticate('jwt', { session: false }),
+  UserController.removeSavedRecipe
+);  
 export default router;

@@ -12,7 +12,9 @@ import ReadMorePage from "./pages/ReadMorePage";
 import UserProfilePage from "./pages/UserProfilePage";
 import UploadedRecipesPage from "./pages/UploadedRecipesPage";
 import UpdateRecipePage from "./pages/UpdateRecipePage";
+import SavedRecipesPage from "./pages/SavedRecipesPage";
 import "./App.css"; // Import the CSS file
+
 
 
 
@@ -34,6 +36,7 @@ const App = () => {
             <Route path="/user-profile/:id" element={<UserProfilePage />} />
             <Route path="/uploaded-recipes" element={<UploadedRecipesPage />} />
             <Route path="/update-recipe/:id" element={<UpdateRecipePage />} />
+            <Route path="/saved-recipes-list" element={<SavedRecipesPage />} />
           </Routes>
         </div>
       </div>

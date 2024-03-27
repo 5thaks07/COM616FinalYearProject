@@ -178,7 +178,7 @@ const UserProfile = () => {
           </p>
           <p>
             <strong>
-              <Link to="/saved-recipes">
+              <Link to="/saved-recipes-list">
                 Saved Recipes: {userDetails.savedRecipesCount}
               </Link>
             </strong>{" "}
