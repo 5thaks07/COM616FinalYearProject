@@ -20,7 +20,10 @@ const loginUser = async (email, password) => {
     }
   } catch (error) {
     console.error("Error logging in:", error);
-    return { success: false, message: "An error occurred, please try again later" };
+    return {
+      success: false,
+      message: "An error occurred, please try again later",
+    };
   }
 };
 
@@ -47,7 +50,9 @@ function LoginPage() {
           <div className="card">
             <div className="card-body">
               <h1 className="card-title text-center mb-4">Login</h1>
-              {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
+              {errorMessage && (
+                <p className="text-danger text-center">{errorMessage}</p>
+              )}
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <input
@@ -70,10 +75,14 @@ function LoginPage() {
                   />
                 </div>
                 <div className="form-group">
-                  <button type="submit" className="btn btn-primary btn-block">Login</button>
+                  <button type="submit" className="btn btn-primary btn-block">
+                    Login
+                  </button>
                 </div>
               </form>
-              <p className="text-center">Don't have an account? <Link to="/register">Register</Link></p>
+              <p className="text-center">
+                Don't have an account? <Link to="/register">Register</Link>
+              </p>
             </div>
           </div>
         </div>

@@ -9,7 +9,9 @@ const UpdateRecipePage = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/recipe/detail/${id}`);
+        const response = await fetch(
+          `http://localhost:5000/recipe/detail/${id}`
+        );
         const data = await response.json();
         if (response.ok) {
           setRecipe(data.recipe);
@@ -47,33 +49,36 @@ const UpdateRecipePage = () => {
     try {
       const token = localStorage.getItem("token");
       const formDataWithImages = new FormData();
-  
+
       // Append only the form fields to the FormData object
-      formDataWithImages.append('name', recipe.name);
-      formDataWithImages.append('type', recipe.type);
-      formDataWithImages.append('shortDescription', recipe.shortDescription);
-      formDataWithImages.append('fullDescription', recipe.fullDescription);
-      formDataWithImages.append('ingredients', recipe.ingredients);
-      formDataWithImages.append('servings', recipe.servings);
-      formDataWithImages.append('time', recipe.time);
-  
+      formDataWithImages.append("name", recipe.name);
+      formDataWithImages.append("type", recipe.type);
+      formDataWithImages.append("shortDescription", recipe.shortDescription);
+      formDataWithImages.append("fullDescription", recipe.fullDescription);
+      formDataWithImages.append("ingredients", recipe.ingredients);
+      formDataWithImages.append("servings", recipe.servings);
+      formDataWithImages.append("time", recipe.time);
+
       // Append each image separately to the FormData object
       recipe.images.forEach((image, index) => {
         formDataWithImages.append(`image${index}`, image);
       });
-  
+
       // Send the form data with images to the server
-      const response = await fetch(`http://localhost:5000/recipe/update/${id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formDataWithImages,
-      });
-      
+      const response = await fetch(
+        `http://localhost:5000/recipe/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formDataWithImages,
+        }
+      );
+
       const data = await response.json();
       if (response.ok) {
-         alert(data.message);
+        alert(data.message);
       } else {
         console.error("Failed to update recipe:", data.message);
       }
@@ -81,7 +86,6 @@ const UpdateRecipePage = () => {
       console.error("Error updating recipe:", error);
     }
   };
-  
 
   if (loading) {
     return <p>Loading...</p>;

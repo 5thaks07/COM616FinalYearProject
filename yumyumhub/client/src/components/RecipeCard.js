@@ -6,7 +6,7 @@ const RecipeCard = ({ recipe }) => {
   const [liked, setLiked] = useState(false);
 
   // Ensure recipe object is valid before rendering
-  if (!recipe || typeof recipe !== 'object') {
+  if (!recipe || typeof recipe !== "object") {
     return null; // Return null or render a placeholder component
   }
 
@@ -29,7 +29,6 @@ const RecipeCard = ({ recipe }) => {
         setLiked(true);
         //  update the like count in the UI
         recipe.likes += 1;
-        
       } else if (response.status === 401) {
         console.error("Failed to like the recipe: Unauthorized");
         alert("Please login to like the recipe");
@@ -77,6 +76,5 @@ const RecipeCard = ({ recipe }) => {
     </Card>
   );
 };
-
 
 export default RecipeCard;

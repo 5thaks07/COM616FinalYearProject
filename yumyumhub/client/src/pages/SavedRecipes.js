@@ -19,7 +19,7 @@ const SavedRecipes = () => {
   const fetchSavedRecipes = async (token) => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/user/savedrecipes', {
+      const response = await fetch("http://localhost:5000/user/savedrecipes", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -30,18 +30,18 @@ const SavedRecipes = () => {
         if (Array.isArray(data.savedRecipes)) {
           setSavedRecipes(data.savedRecipes);
         } else {
-          console.error('Invalid savedRecipes data:', data.savedRecipes);
+          console.error("Invalid savedRecipes data:", data.savedRecipes);
         }
       } else {
-        console.error('Failed to fetch saved recipes:', data.message);
+        console.error("Failed to fetch saved recipes:", data.message);
       }
     } catch (error) {
-      console.error('Error fetching saved recipes:', error);
+      console.error("Error fetching saved recipes:", error);
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="container">
       {isLoggedIn ? (
@@ -63,13 +63,15 @@ const SavedRecipes = () => {
         </div>
       ) : (
         <div className="container mt-5 text-center">
-        <p className="fs-4">You must be logged in to access your saved recipes.</p>
-        <p className="mb-0">
-          <Link to="/login" className="btn btn-primary">
-            Login
-          </Link>
-        </p>
-      </div>
+          <p className="fs-4">
+            You must be logged in to access your saved recipes.
+          </p>
+          <p className="mb-0">
+            <Link to="/login" className="btn btn-primary">
+              Login
+            </Link>
+          </p>
+        </div>
       )}
     </div>
   );

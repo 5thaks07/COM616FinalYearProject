@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom"; 
+import { useParams, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
 const ReadMorePage = () => {
@@ -56,7 +56,7 @@ const ReadMorePage = () => {
       console.error("Error saving the recipe:", error);
     }
   };
-  
+
   if (loading) {
     return <p>Loading...</p>;
   }
