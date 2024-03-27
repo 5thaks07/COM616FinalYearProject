@@ -1,6 +1,7 @@
 import { Recipe } from '../models/Recipe.js';
 import { User } from '../models/User.js';
 import mongoose from 'mongoose';
+import fs from 'fs';
 
 export const getRecipes = async (req, res) => {
   try {
@@ -98,9 +99,9 @@ export const createRecipe = async (req, res) => {
     await Recipe.findByIdAndUpdate(recipeId, { images: imageUrls });
 
     // Find the user who uploaded the recipe and add the recipe ID to the user's uploadedRecipes array
-    await User.findByIdAndUpdate
-    (userId, { $push: { uploadedRecipes: recipeId } });
-
+    await User.findByIdAndUpdate(userId, {
+      $push: { uploadedRecipes: recipeId },
+    });
 
     // Return the response with the created recipe
     return res.status(201).json({
@@ -123,10 +124,38 @@ export const updateRecipe = async (req, res) => {
       return res.status(400).json({ message: 'Invalid recipe ID' });
     }
 
-    // Find the recipe
-    const recipe = await Recipe.findById(recipeId);
+    const {
+      name,
+      type,
+      shortDescription,
+      fullDescription,
+      ingredients,
+      servings,
+      time,
+    } = req.body;
 
-    // Check if the recipe exists
+    // Check if all required fields are provided
+    if (
+      !name ||
+      !type ||
+      !shortDescription ||
+      !fullDescription ||
+      !ingredients ||
+      !servings ||
+      !time
+    ) {
+      return res
+        .status(400)
+        .json({ message: 'All required fields must be provided' });
+    }
+
+    // Check if images are uploaded
+    if (!req.files) {
+      return res.status(400).json({ message: 'No images uploaded' });
+    }
+
+    // Find the recipe and delete old images
+    const recipe = await Recipe.findById(recipeId);
     if (!recipe) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
@@ -138,10 +167,38 @@ export const updateRecipe = async (req, res) => {
         .json({ message: 'You do not have permission to update this recipe' });
     }
 
+    // Delete old images
+    const deleteImagePromises = recipe.images.map((image) => {
+      const imageName = image.split('/').pop();
+      return new Promise((resolve, reject) => {
+        fs.unlink(`${process.env.PERMANENT_UPLOAD_DIR}/${imageName}`, (err) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+    });
+    await Promise.all(deleteImagePromises);
+
+    // Get the new images from the request
+    const images = req.files;
+
+    // Move uploaded images to permanent location and generate image URLs
+    const imageUrls = await Promise.all(
+      Object.entries(images).map(async ([key, image]) => {
+        const fileName = `${recipeId}_${key}.${image.name.split('.').pop()}`;
+        await image.mv(`${process.env.PERMANENT_UPLOAD_DIR}/${fileName}`);
+        return `${process.env.BASE_URL}/uploadImages/${fileName}`;
+      })
+    );
+
     // Update the recipe
     const updatedRecipe = await Recipe.findByIdAndUpdate(
       recipeId,
-      { $set: req.body },
+      { $set: { ...req.body, images: imageUrls } },
       { new: true }
     );
 
@@ -216,7 +273,9 @@ export const likeRecipe = async (req, res) => {
 
     // Check if the user has already liked the recipe
     if (recipe.likedBy.includes(userId)) {
-      return res.status(400).json({ message: 'You have already liked this recipe' });
+      return res
+        .status(400)
+        .json({ message: 'You have already liked this recipe' });
     }
 
     // Add the user ID to the likedBy array
@@ -239,7 +298,7 @@ export const likeRecipe = async (req, res) => {
 };
 
 export const getRecipeDetailById = async (req, res) => {
-  const  recipeId  = req.params.id;
+  const recipeId = req.params.id;
 
   try {
     // Check if recipe ID is valid
@@ -271,7 +330,7 @@ export const getRecipeDetailById = async (req, res) => {
   }
 };
 
-export const saveRecipe = async (req, res) => { 
+export const saveRecipe = async (req, res) => {
   const recipeId = req.params.id;
 
   try {
@@ -290,7 +349,9 @@ export const saveRecipe = async (req, res) => {
 
     // Check if the user has already saved the recipe
     if (req.user.savedRecipes.includes(recipeId)) {
-      return res.status(400).json({ message: 'You have already saved this recipe' });
+      return res
+        .status(400)
+        .json({ message: 'You have already saved this recipe' });
     }
 
     // Add the recipe ID to the user's savedRecipes array
@@ -305,8 +366,21 @@ export const saveRecipe = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
-
-
   }
-}
+};
+export const getRecipesForUser = async (req, res) => {
+  try {
+    let recipes;
+    const userId = req.user._id;
 
+    recipes = await Recipe.find({ userId: userId });
+
+    // check if Recipes found
+    if (!recipes) return res.status(500).json({ message: 'No Recipes found' });
+
+    return res.json(recipes);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};

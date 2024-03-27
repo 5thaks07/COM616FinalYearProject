@@ -117,7 +117,6 @@ const UserProfile = () => {
 
   return (
     <div className="container mt-5">
-      
       {loading ? (
         <p>Loading...</p>
       ) : isLoggedIn && userDetails ? (
@@ -171,23 +170,29 @@ const UserProfile = () => {
             </button>
           </div>
           <p>
-            <strong>Uploaded Recipes Count:</strong>{" "}
-            {userDetails.uploadedRecipesCount}
+            <strong>
+              <Link to="/uploaded-recipes">
+                Uploaded Recipes: {userDetails.uploadedRecipesCount}
+              </Link>
+            </strong>{" "}
           </p>
           <p>
-            <strong>Saved Recipes Count:</strong>{" "}
-            {userDetails.savedRecipesCount}
+            <strong>
+              <Link to="/saved-recipes">
+                Saved Recipes: {userDetails.savedRecipesCount}
+              </Link>
+            </strong>{" "}
           </p>
         </div>
       ) : (
         <div className="container mt-5 text-center">
-        <p className="fs-4">You must be logged in to view your profile.</p>
-        <p className="mb-0">
-          <Link to="/login" className="btn btn-primary">
-            Login
-          </Link>
-        </p>
-      </div>
+          <p className="fs-4">You must be logged in to view your profile.</p>
+          <p className="mb-0">
+            <Link to="/login" className="btn btn-primary">
+              Login
+            </Link>
+          </p>
+        </div>
       )}
     </div>
   );

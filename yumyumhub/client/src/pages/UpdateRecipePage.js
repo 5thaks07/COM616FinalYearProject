@@ -1,101 +1,99 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-const UploadRecipeForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    type: "",
-    shortDescription: "",
-    fullDescription: "",
-    ingredients: "",
-    servings: "",
-    time: "",
-    images: [],
-  });
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+const UpdateRecipePage = () => {
+  const { id } = useParams();
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if the user is logged in by verifying the presence of the token in localStorage
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists, false otherwise
-  }, []);
+    const fetchRecipe = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/recipe/detail/${id}`);
+        const data = await response.json();
+        if (response.ok) {
+          setRecipe(data.recipe);
+        } else {
+          console.error("Failed to fetch recipe:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching recipe:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipe();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setRecipe((prevRecipe) => ({
+      ...prevRecipe,
+      [name]: value,
+    }));
   };
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    console.log(files);
-    setFormData({ ...formData, images: files });
+    setRecipe((prevRecipe) => ({
+      ...prevRecipe,
+      images: files,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-
-      // Create a new FormData object
       const formDataWithImages = new FormData();
-
-      // Append all form data fields
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataWithImages.append(key, value);
+  
+      // Append only the form fields to the FormData object
+      formDataWithImages.append('name', recipe.name);
+      formDataWithImages.append('type', recipe.type);
+      formDataWithImages.append('shortDescription', recipe.shortDescription);
+      formDataWithImages.append('fullDescription', recipe.fullDescription);
+      formDataWithImages.append('ingredients', recipe.ingredients);
+      formDataWithImages.append('servings', recipe.servings);
+      formDataWithImages.append('time', recipe.time);
+  
+      // Append each image separately to the FormData object
+      recipe.images.forEach((image, index) => {
+        formDataWithImages.append(`image${index}`, image);
       });
-
-      // Append images to FormData
-      formData.images.forEach((image, index) => {
-        formDataWithImages.append(`image_${index}`, image);
-      });
-
+  
       // Send the form data with images to the server
-      const response = await fetch("http://localhost:5000/recipe/create", {
-        method: "POST",
+      const response = await fetch(`http://localhost:5000/recipe/update/${id}`, {
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: formDataWithImages,
       });
-
+      
       const data = await response.json();
-      if (data.message) {
-        alert(data.message);
+      if (response.ok) {
+         alert(data.message);
+      } else {
+        console.error("Failed to update recipe:", data.message);
       }
-
-      // Reset form fields
-      setFormData({
-        name: "",
-        type: "",
-        shortDescription: "",
-        fullDescription: "",
-        ingredients: "",
-        servings: "",
-        time: "",
-        images: [],
-      });
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error updating recipe:", error);
     }
   };
+  
 
-  if (!isLoggedIn) {
-    return (
-      <div className="container mt-5 text-center">
-        <p className="fs-4">You must be logged in to upload a recipe.</p>
-        <p className="mb-0">
-          <Link to="/login" className="btn btn-primary">
-            Login
-          </Link>
-        </p>
-      </div>
-    );
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!recipe) {
+    return <p>Recipe not found.</p>;
   }
 
   return (
     <div className="container mt-5">
-      <h2 className="mb-4">Upload Recipe</h2>
+      <h1>Update Recipe</h1>
       <form onSubmit={handleSubmit} enctype="multipart/form-data">
         <div className="mb-3">
           <label className="form-label">Name:</label>
@@ -103,7 +101,7 @@ const UploadRecipeForm = () => {
             type="text"
             className="form-control"
             name="name"
-            value={formData.name}
+            value={recipe.name}
             onChange={handleChange}
             required
           />
@@ -114,7 +112,7 @@ const UploadRecipeForm = () => {
             type="text"
             className="form-control"
             name="type"
-            value={formData.type}
+            value={recipe.type}
             onChange={handleChange}
             required
           />
@@ -125,7 +123,7 @@ const UploadRecipeForm = () => {
             type="text"
             className="form-control"
             name="shortDescription"
-            value={formData.shortDescription}
+            value={recipe.shortDescription}
             onChange={handleChange}
             required
           />
@@ -135,7 +133,7 @@ const UploadRecipeForm = () => {
           <textarea
             className="form-control"
             name="fullDescription"
-            value={formData.fullDescription}
+            value={recipe.fullDescription}
             onChange={handleChange}
             required
           ></textarea>
@@ -145,7 +143,7 @@ const UploadRecipeForm = () => {
           <textarea
             className="form-control"
             name="ingredients"
-            value={formData.ingredients}
+            value={recipe.ingredients}
             onChange={handleChange}
             required
           ></textarea>
@@ -156,7 +154,7 @@ const UploadRecipeForm = () => {
             type="number"
             className="form-control"
             name="servings"
-            value={formData.servings}
+            value={recipe.servings}
             onChange={handleChange}
             required
           />
@@ -167,7 +165,7 @@ const UploadRecipeForm = () => {
             type="text"
             className="form-control"
             name="time"
-            value={formData.time}
+            value={recipe.time}
             onChange={handleChange}
             required
           />
@@ -184,11 +182,11 @@ const UploadRecipeForm = () => {
           />
         </div>
         <button type="submit" className="btn btn-primary">
-          Submit
+          Update Recipe
         </button>
       </form>
     </div>
   );
 };
 
-export default UploadRecipeForm;
+export default UpdateRecipePage;

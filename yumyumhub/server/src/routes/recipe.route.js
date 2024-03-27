@@ -6,6 +6,11 @@ import passport from 'passport';
 const router = Router();
 
 router.get('/list', RecipeController.getRecipes);
+router.get(
+  '/uploadedlist',
+  passport.authenticate('jwt', { session: false }),
+  RecipeController.getRecipesForUser
+);
 router.get('/detail/:id', RecipeController.getRecipeDetailById);
 router.post(
   '/create',
@@ -27,5 +32,9 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   RecipeController.deleteRecipe
 );
-router.put('/like/:id', passport.authenticate('jwt', { session: false }), RecipeController.likeRecipe);
+router.put(
+  '/like/:id',
+  passport.authenticate('jwt', { session: false }),
+  RecipeController.likeRecipe
+);
 export default router;
