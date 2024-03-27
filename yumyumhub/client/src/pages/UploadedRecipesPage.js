@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const UploadedRecipesPage = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,12 +38,35 @@ const UploadedRecipesPage = () => {
   const handleUpdate = (recipeId) => {
     // navigate to the update recipe page
     navigate(`/update-recipe/${recipeId}`);
-    
   };
 
-  const handleDelete = (recipeId) => {
-    // Implement delete logic here
-    console.log("Delete recipe with ID:", recipeId);
+  const handleDelete = async (recipeId) => {
+    // Send a request to the backend to delete the recipe
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:5000/recipe/delete/${recipeId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+        // Remove the deleted recipe from the UI
+        setRecipes((prevRecipes) =>
+          prevRecipes.filter((recipe) => recipe._id !== recipeId)
+        );
+      } else {
+        console.error("Failed to delete the recipe:", data.message);
+        alert("Failed to delete the recipe. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error deleting the recipe:", error);
+    }
   };
 
   return (

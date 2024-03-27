@@ -239,8 +239,31 @@ export const deleteRecipe = async (req, res) => {
         .json({ message: 'You do not have permission to delete this recipe' });
     }
 
+    // Delete the images from the server
+    const deleteImagePromises = recipe.images.map((image) => {
+      const imageName = image.split('/').pop();
+      return new Promise((resolve, reject) => {
+        fs.unlink(`${process.env.PERMANENT_UPLOAD_DIR}/${imageName}`, (err) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+    });
+
+    await Promise.all(deleteImagePromises);
+
+    // Find the user who uploaded the recipe and remove the recipe ID from the user's uploadedRecipes array
+    await User.findByIdAndUpdate(userId, {}, { $pull: { uploadedRecipes: recipeId } });
+
+    // Find all users who have saved the recipe and remove the recipe ID from their savedRecipes array
+    await User.updateMany({}, { $pull: { savedRecipes: recipeId } });
+
     // Delete the recipe
-    await Recipe.findByIdAndRemove(recipeId);
+    await Recipe.findByIdAndDelete(recipeId);
 
     return res.status(200).json({
       message: 'Recipe deleted successfully',
