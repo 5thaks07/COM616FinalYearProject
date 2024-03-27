@@ -31,23 +31,19 @@ const Sidebar = () => {
               <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
             </Link>
             <Link to="/">
-              <CDBSidebarMenuItem icon="columns">
-                 Home
-              </CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="columns">Home</CDBSidebarMenuItem>
             </Link>
             <Link to="/chat">
-              <CDBSidebarMenuItem icon="comment-alt">
-                 Chat
-              </CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="comment-alt">Chat</CDBSidebarMenuItem>
             </Link>
             <Link to="/saved-recipes">
               <CDBSidebarMenuItem icon="bookmark">
-                 Saved Recipes
+                Saved Recipes
               </CDBSidebarMenuItem>
             </Link>
             <Link to="/upload">
               <CDBSidebarMenuItem icon="cloud-upload-alt">
-                 Upload
+                Upload
               </CDBSidebarMenuItem>
             </Link>
           </CDBSidebarMenu>

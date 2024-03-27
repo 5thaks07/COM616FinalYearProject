@@ -257,7 +257,11 @@ export const deleteRecipe = async (req, res) => {
     await Promise.all(deleteImagePromises);
 
     // Find the user who uploaded the recipe and remove the recipe ID from the user's uploadedRecipes array
-    await User.findByIdAndUpdate(userId, {}, { $pull: { uploadedRecipes: recipeId } });
+    await User.findByIdAndUpdate(
+      userId,
+      {},
+      { $pull: { uploadedRecipes: recipeId } }
+    );
 
     // Find all users who have saved the recipe and remove the recipe ID from their savedRecipes array
     await User.updateMany({}, { $pull: { savedRecipes: recipeId } });

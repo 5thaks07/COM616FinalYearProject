@@ -8,11 +8,15 @@ const router = Router();
 router.post('/login', UserController.login);
 router.post('/register', UserController.create);
 
-// route for getting user profile by id 
+// route for getting user profile by id
 router.get('/profile/:id', UserController.getUser);
 
 // route for getting user profile by token
-router.get('/profile', passport.authenticate('jwt', { session: false }), UserController.getUser);
+router.get(
+  '/profile',
+  passport.authenticate('jwt', { session: false }),
+  UserController.getUser
+);
 
 router.get(
   '/savedrecipes',
