@@ -13,12 +13,32 @@ import UserProfilePage from "./pages/UserProfilePage";
 import UploadedRecipesPage from "./pages/UploadedRecipesPage";
 import UpdateRecipePage from "./pages/UpdateRecipePage";
 import SavedRecipesPage from "./pages/SavedRecipesPage";
-import "./App.css"; // Import the CSS file
+import  socket  from "./socket";
+import { useEffect } from "react";
 
+// import css file
+import "./App.css"; 
 
 
 
 const App = () => {
+
+  // connect to socket
+useEffect(() => {
+  socket.on("connect", () => {
+    console.log("Connected to socket", socket.id);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Disconnected from socket");
+  });
+
+  return () => {
+    socket.disconnect();
+  };
+}, []);
+
+
   return (
     <Router>
       <div className="app">
