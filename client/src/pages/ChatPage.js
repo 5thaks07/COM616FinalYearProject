@@ -1,12 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import socket from "../socket";
 
 function Chat() {
+  // connect to socket
+  useEffect(() => {
+    if (!socket) return;
+    console.log("socket:", socket);
+
+    socket.on("connect", () => {
+      console.log("Connected to socket", socket.id);
+    });
+
+    // Socket event listener for incoming messages
+    socket.on("message", (message) => {
+      console.log("New message:", message);
+      setMessages((messages) => [...messages, message]);
+    });
+
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from socket");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
   const handleSendMessage = () => {
+    console.log("Sending message:", newMessage);
     setMessages([...messages, { text: newMessage, user: "You" }]);
     setNewMessage("");
+    socket.emit("message", { text: newMessage });
   };
 
   return (

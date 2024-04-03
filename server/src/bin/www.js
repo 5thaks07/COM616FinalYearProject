@@ -29,6 +29,7 @@ mongoose.connection.on('error', (err) => {
 const server = createServer(app);
 
 const io = new Server(server, {
+  transports: ['websocket', 'polling'],
   cors: {
     origin: process.env.CLIENT_URL,
   },
@@ -55,6 +56,16 @@ io.on('connection', (socket) => {
   const user = socket.decoded;
   console.log('a user connected socket id: ', socket.id);
   console.log('user: ', user);
+
+  // join a room
+  socket.join(user.id);
+  console.log('user joined room: ', user.id);
+
+  // Handle messages
+  socket.on('message', (message) => {
+    console.log('message:', message);
+    io.to(user.id).emit('message', message);
+  });
 
   // Handle disconnect for individual clients
   socket.on('disconnect', () => {

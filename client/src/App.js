@@ -13,18 +13,14 @@ import UserProfilePage from "./pages/UserProfilePage";
 import UploadedRecipesPage from "./pages/UploadedRecipesPage";
 import UpdateRecipePage from "./pages/UpdateRecipePage";
 import SavedRecipesPage from "./pages/SavedRecipesPage";
-import  socket  from "./socket";
-import { useEffect } from "react";
 
 // import css file
-import "./App.css"; 
-
-
+import "./App.css";
 
 const App = () => {
-
-  // connect to socket
+  /*   // connect to socket
 useEffect(() => {
+  if (!socket) return;
   socket.on("connect", () => {
     console.log("Connected to socket", socket.id);
   });
@@ -36,8 +32,7 @@ useEffect(() => {
   return () => {
     socket.disconnect();
   };
-}, []);
-
+}, []); */
 
   return (
     <Router>
