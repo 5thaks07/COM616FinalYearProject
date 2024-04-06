@@ -27,7 +27,7 @@ const RecipeCard = ({ recipe }) => {
       if (response.ok) {
         // If the like was successful, update the UI
         setLiked(true);
-        //  update the like count in the UI
+        // Update the like count in the UI
         recipe.likes += 1;
       } else if (response.status === 401) {
         console.error("Failed to like the recipe: Unauthorized");
@@ -45,7 +45,12 @@ const RecipeCard = ({ recipe }) => {
     <Card style={{ marginBottom: "20px" }}>
       {/* Display only the first image if it exists */}
       {recipe.images && recipe.images.length > 0 && (
-        <Card.Img variant="top" src={recipe.images[0]} alt={recipe.name} />
+        <Card.Img
+          variant="top"
+          src={recipe.images[0]}
+          alt={recipe.name}
+          style={{ width: "100%", height: "200px", objectFit: "cover" }}
+        />
       )}
       <Card.Body>
         <Card.Title>{recipe.name}</Card.Title>
@@ -66,11 +71,9 @@ const RecipeCard = ({ recipe }) => {
         )}
         <Link
           to={`/recipe/detail/${recipe._id}`}
-          style={{ textDecoration: "none" }}
+          style={{ textDecoration: "none", marginLeft: "10px" }}
         >
-          <Button variant="secondary" style={{ marginLeft: "10px" }}>
-            Read More
-          </Button>
+          <Button variant="secondary">Read More</Button>
         </Link>
       </Card.Body>
     </Card>
