@@ -34,8 +34,7 @@ const io = new Server(server, {
     origin: process.env.CLIENT_URL,
   },
 });
-console.log('io:', io);
-console.log('process.env.CLIENT_URL:', process.env.CLIENT_URL);
+
 
 // middleware for socket.io to check for valid token
 io.use((socket, next) => {
@@ -73,6 +72,11 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user disconnected');
   }); */
+});
+
+// check for errors
+io.on('error', (err) => {
+  console.log("io err",err);
 });
 
 server.listen(5000, () => {
