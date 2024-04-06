@@ -27,3 +27,19 @@ body {
   width: 300px;
   margin-left: auto; /* Push the input to the right */
 }
+
+/* style for side bar  so that it is displayed till the  bottom of the page*/
+
+.sidebar {
+  background-color: #4c53af;
+  color: white;
+  width: 250px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
+

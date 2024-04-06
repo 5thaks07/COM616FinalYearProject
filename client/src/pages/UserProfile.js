@@ -172,20 +172,22 @@ const UserProfile = () => {
               Logout
             </button>
           </div>
-          <p>
-            <strong>
-              <Link to="/uploaded-recipes">
-                Uploaded Recipes: {userDetails.uploadedRecipesCount}
-              </Link>
-            </strong>{" "}
-          </p>
-          <p>
-            <strong>
-              <Link to="/saved-recipes-list">
-                Saved Recipes: {userDetails.savedRecipesCount}
-              </Link>
-            </strong>{" "}
-          </p>
+          <div className="mt-4">
+            <p>
+              <strong>
+                <Link to="/uploaded-recipes" className="btn btn-primary">
+                  <i className="fas fa-upload"></i> Uploaded Recipes: {userDetails.uploadedRecipesCount}
+                </Link>
+              </strong>{" "}
+            </p>
+            <p>
+              <strong>
+                <Link to="/saved-recipes" className="btn btn-success">
+                  <i className="fas fa-save"></i> Saved Recipes: {userDetails.savedRecipesCount}
+                </Link>
+              </strong>{" "}
+            </p>
+          </div>
         </div>
       ) : (
         <div className="container mt-5 text-center">

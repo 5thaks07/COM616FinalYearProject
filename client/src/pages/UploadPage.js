@@ -96,7 +96,7 @@ const UploadRecipeForm = () => {
   return (
     <div className="container mt-5">
       <h2 className="mb-4">Upload Recipe</h2>
-      <form onSubmit={handleSubmit} enctype="multipart/form-data">
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="mb-3">
           <label className="form-label">Name:</label>
           <input
