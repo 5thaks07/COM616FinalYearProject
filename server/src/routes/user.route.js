@@ -11,6 +11,9 @@ router.post('/register', UserController.create);
 // route for getting user profile by id
 router.get('/profile/:id', UserController.getUser);
 
+// route for getting all users
+router.get('/users', UserController.getUsers);
+
 // route for getting user profile by token
 router.get(
   '/profile',

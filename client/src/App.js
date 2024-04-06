@@ -18,22 +18,6 @@ import SavedRecipesPage from "./pages/SavedRecipesPage";
 import "./App.css";
 
 const App = () => {
-  /*   // connect to socket
-useEffect(() => {
-  if (!socket) return;
-  socket.on("connect", () => {
-    console.log("Connected to socket", socket.id);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Disconnected from socket");
-  });
-
-  return () => {
-    socket.disconnect();
-  };
-}, []); */
-
   return (
     <Router>
       <div className="app">
@@ -52,6 +36,7 @@ useEffect(() => {
             <Route path="/uploaded-recipes" element={<UploadedRecipesPage />} />
             <Route path="/update-recipe/:id" element={<UpdateRecipePage />} />
             <Route path="/saved-recipes-list" element={<SavedRecipesPage />} />
+            <Route path="*" element={<HomePage />} />
           </Routes>
         </div>
       </div>

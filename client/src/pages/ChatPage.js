@@ -33,7 +33,7 @@ function Chat() {
     console.log("Sending message:", newMessage);
     setMessages([...messages, { text: newMessage, user: "You" }]);
     setNewMessage("");
-    socket.emit("message", { text: newMessage });
+    socket.emit("message",  newMessage );
   };
 
   return (

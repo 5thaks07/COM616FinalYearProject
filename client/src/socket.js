@@ -10,7 +10,7 @@ const token = localStorage.getItem("token");
 // Initialize socket connection with or without authentication based on token presence
 const socket = token
   ? io(URL, {
-    transports: ["websocket", "polling"],
+    transports: ["websocket"],
       auth: {
         token: token,
       },

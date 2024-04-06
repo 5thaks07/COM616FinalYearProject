@@ -42,6 +42,20 @@ export const getUser = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+// Get all the users
+export const getUsers = async (req, res) => {
+  try {
+    // Find all the users
+    const users = await User.find();
+
+    // Send back the found users
+    return res.json({ users });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 export const login = async (req, res) => {
   try {
     // check if all fields are provided
@@ -308,4 +322,4 @@ export const removeSavedRecipe = async (req, res) => {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
-}
+};

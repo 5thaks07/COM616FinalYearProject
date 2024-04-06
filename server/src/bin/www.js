@@ -29,11 +29,13 @@ mongoose.connection.on('error', (err) => {
 const server = createServer(app);
 
 const io = new Server(server, {
-  transports: ['websocket', 'polling'],
+  transports: ['websocket'],
   cors: {
     origin: process.env.CLIENT_URL,
   },
 });
+console.log('io:', io);
+console.log('process.env.CLIENT_URL:', process.env.CLIENT_URL);
 
 // middleware for socket.io to check for valid token
 io.use((socket, next) => {
@@ -58,7 +60,7 @@ io.on('connection', (socket) => {
   console.log('user: ', user);
 
   // join a room
-  socket.join(user.id);
+ /*  socket.join(user.id);
   console.log('user joined room: ', user.id);
 
   // Handle messages
@@ -70,7 +72,7 @@ io.on('connection', (socket) => {
   // Handle disconnect for individual clients
   socket.on('disconnect', () => {
     console.log('user disconnected');
-  });
+  }); */
 });
 
 server.listen(5000, () => {
