@@ -7,6 +7,8 @@ function RecipeList() {
   const [recipes, setRecipes] = useState([]);
   const [initialRecipes, setInitialRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recipesPerPage = 6;
 
   // Function to fetch recipes from the API
   const fetchRecipes = useCallback(async () => {
@@ -33,12 +35,22 @@ function RecipeList() {
       recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setRecipes(filteredRecipes);
+    setCurrentPage(1); // Reset to first page when searching
   };
 
   // Function to reset the recipes list to the initial list
   const resetRecipes = () => {
     setRecipes(initialRecipes);
+    setCurrentPage(1); // Reset to first page when resetting
   };
+
+  // Logic to get current recipes to display based on pagination
+  const indexOfLastRecipe = currentPage * recipesPerPage;
+  const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+  const currentRecipes = recipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <>
@@ -58,17 +70,27 @@ function RecipeList() {
           <div className="container">
             {loading ? (
               <p>Loading...</p>
-            ) : recipes.length === 0 ? (
+            ) : currentRecipes.length === 0 ? (
               <p>No recipes found.</p>
             ) : (
               <div className="row">
-                {recipes.map((recipe) => (
+                {currentRecipes.map((recipe) => (
                   <div className="col-md-4" key={recipe._id}>
                     <RecipeCard recipe={recipe} />
                   </div>
                 ))}
               </div>
             )}
+            {/* Pagination */}
+            <nav>
+              <ul className="pagination justify-content-center">
+                {[...Array(Math.ceil(recipes.length / recipesPerPage)).keys()].map((number) => (
+                  <li key={number} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
+                    <button onClick={() => paginate(number + 1)} className="page-link">{number + 1}</button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
         </div>
       </main>

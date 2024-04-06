@@ -41,20 +41,20 @@ const UserProfilePage = () => {
     <div className="container mt-5">
       <div className="card">
         <div className="card-body">
-          <h1 className="card-title">User Profile</h1>
+          <h1 className="card-title mb-4">User Profile</h1>
           <ul className="list-group">
-            <li className="list-group-item">
+            <li className="list-group-item bg-light">
               <strong>Name:</strong> {user.name}
             </li>
-            <li className="list-group-item">
+            <li className="list-group-item bg-light">
               <strong>Email:</strong> {user.email}
             </li>
-            <li className="list-group-item">
-              <strong>Uploaded Recipes Count:</strong>{" "}
+            <li className="list-group-item bg-light">
+              <strong>Uploaded Recipes:</strong>{" "}
               {user.uploadedRecipesCount}
             </li>
           </ul>
-          {/* Add more user details as needed */}
+         
         </div>
       </div>
     </div>

@@ -85,7 +85,7 @@ const ReadMorePage = () => {
               <h1 className="card-title">{recipe.name}</h1>
               <p className="card-text">{recipe.shortDescription}</p>
               <div className="mb-3">
-                Uploaded by -{" "}
+                <h4>Uploaded By</h4>{" "}
                 <Link to={`/user-profile/${user._id}`}>
                   <Button variant="primary">
                     {user ? user.name : "Unknown"}
