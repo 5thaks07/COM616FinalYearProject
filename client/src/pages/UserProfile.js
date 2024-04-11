@@ -182,7 +182,7 @@ const UserProfile = () => {
             </p>
             <p>
               <strong>
-                <Link to="/saved-recipes" className="btn btn-success">
+                <Link to="/saved-recipes-list" className="btn btn-success">
                   <i className="fas fa-save"></i> Saved Recipes: {userDetails.savedRecipesCount}
                 </Link>
               </strong>{" "}
