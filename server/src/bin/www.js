@@ -59,8 +59,8 @@ io.on('connection', (socket) => {
   console.log('user: ', user);
 
   // join a room
- /*  socket.join(user.id);
-  console.log('user joined room: ', user.id);
+  /* socket.join(user.id);
+  console.log('user joined room: ', user.id); */
 
   // Handle messages
   socket.on('message', (message) => {
@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
   // Handle disconnect for individual clients
   socket.on('disconnect', () => {
     console.log('user disconnected');
-  }); */
+  });
 });
 
 // check for errors

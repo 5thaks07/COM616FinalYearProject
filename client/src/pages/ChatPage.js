@@ -4,6 +4,7 @@ import socket from "../socket";
 function Chat() {
   // connect to socket
   useEffect(() => {
+     
     if (!socket) return;
     console.log("socket:", socket);
 
@@ -22,8 +23,11 @@ function Chat() {
       console.log("Disconnected from socket");
     });
 
-    return () => {
-      socket.disconnect();
+    return () =>{
+      if (socket.connected) {
+        console.log("Disconnecting socket");
+        socket.disconnect();
+      }
     };
   }, []);
   const [messages, setMessages] = useState([]);
