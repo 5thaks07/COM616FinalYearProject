@@ -9,6 +9,7 @@ dotenv.config({ path: '../.env' });
 import UserRouter from './routes/user.route.js';
 import RecipeRouter from './routes/recipe.route.js';
 import ChatRouter from './routes/chat.route.js';
+import MessageRouter from './routes/message.route.js';
 
 import passport from 'passport';
 import('./config/passport.js');
@@ -44,5 +45,6 @@ app.use('/uploadImages', express.static('uploadImages'));
 app.use('/user', UserRouter);
 app.use('/recipe', RecipeRouter);
 app.use('/chat', ChatRouter);
+app.use('/message', MessageRouter);
 
 export default app;
