@@ -7,7 +7,7 @@ export const createChat = async (req, res) => {
 
   try {
     const testchat = await Chat.findOne({
-      members: { firstUserId, secondUserId },
+      members: { $all: [firstUserId, secondUserId] },
     });
 
     if (testchat) {
@@ -32,7 +32,7 @@ export const findUserChats = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const chats = await Chat.find({ members: userId });
+    const chats = await Chat.find({ members: { $in: userId } });
 
     res.status(200).json({ chats });
   } catch (error) {
@@ -47,7 +47,7 @@ export const findChat = async (req, res) => {
   const { firstUserId, secondUserId } = req.params;
 
   try {
-    const chat = await Chat.findOne({ members: { firstUserId, secondUserId } });
+    const chat = await Chat.findOne({ members: { $all: [firstUserId, secondUserId] } });
 
     res.status(200).json({ chat });
   } catch (error) {

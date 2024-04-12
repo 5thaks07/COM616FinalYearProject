@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 const chatSchema = new Schema(
   {
     // chat members
-    members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    members: [{ type: String }],
   },
   { timestamps: true }
 );
