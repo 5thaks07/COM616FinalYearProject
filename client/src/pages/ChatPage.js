@@ -7,10 +7,14 @@ function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [socket, setSocket] = useState(null); // Store socket instance in state
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null); // Track the selected user for opening chat
 
-console.log("socket",socket);
-
+  console.log("socket", socket);
   useEffect(() => {
+    // Fetch users from the backend
+    fetchUsers();
+
     // Check for token
     const token = localStorage.getItem("token");
     if (!token) {
@@ -31,77 +35,120 @@ console.log("socket",socket);
     };
   }, []); // Empty dependency array ensures that this effect runs only once
 
-  // Check if socket is connected and user is logged in
- /*  useEffect(() => {
-    console.log("Socket:", socket);
-    if (socket && socket.connected) {
-      setIsLoggedIn(true);
-      console.log("User is logged in");
-    } else {
-      setIsLoggedIn(false);
-      console.log("User is not logged in");
+  // Fetch users from the backend
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/user/users", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Users data", data);
+        setUsers(data.users);
+      } else {
+        console.log("Failed to fetch users");
+      }
+    } catch (error) {
+      console.log("Failed to fetch users", error);
     }
-  }, [socket]); // Listen for changes to the socket */
+  };
+
+  // Handle click on a user to open chat
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
+    console.log("Selected user", user);
+    // fetch messesages for that user , if any or else create a new chat with that user 
+  };
 
   const handleSendMessage = () => {
-    
-      socket.emit("message", newMessage);
-    
+    socket.emit("message", newMessage);
     setMessages([...messages, { text: newMessage, user: "You" }]);
     setNewMessage("");
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "800px",
-        margin: "20px auto",
-        padding: "20px",
-        backgroundColor: "white",
-        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-        borderRadius: "5px",
-      }}
-    >
-      {isLoggedIn ? (
-        <>
-          <h2>Chat</h2>
-          <div
-            style={{
-              height: "300px",
-              border: "1px solid #ddd",
-              overflowY: "auto",
-              marginBottom: "10px",
-              padding: "10px",
-            }}
-          >
-            {messages.map((message, index) => (
-              <div key={index}>
-                <strong>{message.user}:</strong> {message.text}
-              </div>
-            ))}
+    <div className="container">
+      <div className="row">
+        <div className="col-md-3">
+          <div className="card">
+            <div className="card-header">
+              <h3>Users</h3>
+            </div>
+            <ul className="list-group list-group-flush">
+              {users.map((user) => (
+                <li
+                  key={user._id}
+                  className="list-group-item"
+                  onClick={() => handleUserClick(user)}
+                >
+                  {user.name}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div style={{ display: "flex" }}>
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              style={{ flex: "1", marginRight: "10px" }}
-            />
-            <button onClick={handleSendMessage}>Send</button>
-          </div>
-        </>
-      ) : (
-        <div className="container mt-5 text-center">
-          <p className="fs-4">
-            You must be logged in to use the chat feature.
-          </p>
-          <p className="mb-0">
-            <Link to="/login" className="btn btn-primary">
-              Login
-            </Link>
-          </p>
         </div>
-      )}
+        <div className="col-md-9">
+          {isLoggedIn ? (
+            <>
+              <div className="card">
+                <div className="card-header">
+                  {selectedUser ? (
+                    <h2>Chat with {selectedUser.name}</h2>
+                  ) : (
+                    <h2>Chat</h2>
+                  )}
+                </div>
+                <div className="card-body">
+                  {selectedUser ? (
+                    <>
+                      <div className="message-container">
+                        {messages.map((message, index) => (
+                          <div key={index}>
+                            <strong>{message.user}:</strong> {message.text}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="message-input">
+                        <input
+                          type="text"
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          className="form-control"
+                          placeholder="Type your message..."
+                        />
+                        <button
+                          onClick={handleSendMessage}
+                          className="btn btn-primary"
+                        >
+                          Send
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-center">
+                      Select a user to start chatting
+                    </p>
+                  )}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="container mt-5 text-center">
+              <p className="fs-4">
+                You must be logged in to use the chat feature.
+              </p>
+              <p className="mb-0">
+                <Link to="/login" className="btn btn-primary">
+                  Login
+                </Link>
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
