@@ -1,54 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import socket from "../socket";
+import initializeSocket from "../socket";
 
 function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [socket, setSocket] = useState(null); // Store socket instance in state
+
+console.log("socket",socket);
 
   useEffect(() => {
-    if (!socket) {
-      // Socket is null, meaning user is not logged in
-      console.log("User is not logged in");
-      setIsLoggedIn(false);
+    // Check for token
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Token not found. Please log in.");
       return;
     }
 
-    if (!socket.connected) {
-      socket.connect();
-    }
+    // Initialize socket with token when component mounts
+    const initializedSocket = initializeSocket(token);
+    setSocket(initializedSocket);
+    setIsLoggedIn(true); // Set isLoggedIn to true
 
-    console.log("socket:", socket);
-
-    socket.on("connect", () => {
-      console.log("Connected to socket", socket.id);
-      setIsLoggedIn(true);
-    });
-
-    socket.on("message", (message) => {
-      console.log("New message:", message);
-      setMessages((messages) => [...messages, message]);
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Disconnected from socket");
-      setIsLoggedIn(false);
-    });
-
+    // Cleanup function to disconnect socket when component unmounts
     return () => {
-      if (socket.connected) {
-        console.log("Disconnecting socket");
-        socket.disconnect();
+      if (initializedSocket && initializedSocket.connected) {
+        initializedSocket.disconnect();
       }
     };
-  }, []);
+  }, []); // Empty dependency array ensures that this effect runs only once
+
+  // Check if socket is connected and user is logged in
+ /*  useEffect(() => {
+    console.log("Socket:", socket);
+    if (socket && socket.connected) {
+      setIsLoggedIn(true);
+      console.log("User is logged in");
+    } else {
+      setIsLoggedIn(false);
+      console.log("User is not logged in");
+    }
+  }, [socket]); // Listen for changes to the socket */
 
   const handleSendMessage = () => {
-    console.log("Sending message:", newMessage);
+    
+      socket.emit("message", newMessage);
+    
     setMessages([...messages, { text: newMessage, user: "You" }]);
     setNewMessage("");
-    socket.emit("message", newMessage);
   };
 
   return (
@@ -93,7 +93,7 @@ function Chat() {
       ) : (
         <div className="container mt-5 text-center">
           <p className="fs-4">
-            You must be logged in to use Chat Feature.
+            You must be logged in to use the chat feature.
           </p>
           <p className="mb-0">
             <Link to="/login" className="btn btn-primary">
