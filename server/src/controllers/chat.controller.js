@@ -1,4 +1,4 @@
-import Chat from '../models/chat.model.js';
+import { Chat } from '../models/Chat.js';
 
 // createChat
 
