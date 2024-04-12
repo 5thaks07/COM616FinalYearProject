@@ -49,7 +49,11 @@ export const getUsers = async (req, res) => {
     // Find all the users
     const users = await User.find();
 
-    // Send back the found users
+    // Send back the found users without the password field
+    users.forEach((user) => {
+      user.password = undefined;
+    }); // remove the password field from each user object
+
     return res.json({ users });
   } catch (error) {
     console.error(error);
