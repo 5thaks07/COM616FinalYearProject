@@ -60,8 +60,58 @@ function Chat() {
   const handleUserClick = (user) => {
     setSelectedUser(user);
     console.log("Selected user", user);
-    // fetch messesages for that user , if any or else create a new chat with that user 
+    
+    // fetch the chatId between the logged in user and the selected user
+  const fetchChatId = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:5000/chat/create/${user._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Chat data", data);
+        console.log("ChatId", data.chat._id);
+        // join the chat room
+       // socket.emit("joinRoom", data.chatId);
+        // fetch messages for the chat
+        fetchMessages(data.chat._id);
+      } else {
+        console.log("Failed to fetch chatId");
+      }
+    } catch (error) {
+      console.log("Failed to fetch chatId", error);
+    }     
+  }
+    fetchChatId();
   };
+
+
+  // Fetch messages for the chat
+  const fetchMessages = async (chatId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/message/get/${chatId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Messages data", data);
+        setMessages(data.messages);
+      } else {
+        console.log("Failed to fetch messages");
+      }
+    } catch (error) {
+      console.log("Failed to fetch messages", error);
+    }
+  };
+
 
   const handleSendMessage = () => {
     socket.emit("message", newMessage);
