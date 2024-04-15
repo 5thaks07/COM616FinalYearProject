@@ -9,6 +9,7 @@ function Chat() {
   const [socket, setSocket] = useState(null); // Store socket instance in state
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null); // Track the selected user for opening chat
+  const [chatId, setChatId] = useState(null);
 
   console.log("socket", socket);
   useEffect(() => {
@@ -78,6 +79,7 @@ function Chat() {
         const data = await response.json();
         console.log("Chat data", data);
         console.log("ChatId", data.chat._id);
+        setChatId(data.chat._id);
         // join the chat room
        // socket.emit("joinRoom", data.chatId);
         // fetch messages for the chat
@@ -119,6 +121,32 @@ function Chat() {
     socket.emit("message", newMessage);
     setMessages([...messages, { text: newMessage, user: "You" }]);
     setNewMessage("");
+    // send the message to the backend
+    const sendMessage = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:5000/message/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            chatId: chatId,
+            text: newMessage,
+          }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Message data", data);
+        } else {
+          console.log("Failed to send message");
+        }
+      } catch (error) {
+        console.log("Failed to send message", error);
+      }
+    };
+    sendMessage();
   };
 
   return (
