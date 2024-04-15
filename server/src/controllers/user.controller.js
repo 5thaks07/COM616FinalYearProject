@@ -46,8 +46,9 @@ export const getUser = async (req, res) => {
 // Get all the users
 export const getUsers = async (req, res) => {
   try {
-    // Find all the users and return only the id and name fields
-    const users = await User.find({}, 'id name');
+    const user = req.user;
+    // Find all the users and return only the id and name fields, and exclude the user who is making the request
+    const users = await User.find({ _id: { $ne: user._id } }, 'id name');
 
     // Send back the users
 

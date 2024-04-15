@@ -38,10 +38,12 @@ function Chat() {
   // Fetch users from the backend
   const fetchUsers = async () => {
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch("http://localhost:5000/user/users", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
       if (response.ok) {

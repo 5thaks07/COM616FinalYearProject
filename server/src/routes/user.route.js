@@ -12,7 +12,9 @@ router.post('/register', UserController.create);
 router.get('/profile/:id', UserController.getUser);
 
 // route for getting all users
-router.get('/users', UserController.getUsers);
+router.get('/users',
+  passport.authenticate('jwt', { session: false }),
+ UserController.getUsers);
 
 // route for getting user profile by token
 router.get(
