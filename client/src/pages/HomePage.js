@@ -84,9 +84,21 @@ function RecipeList() {
             {/* Pagination */}
             <nav>
               <ul className="pagination justify-content-center">
-                {[...Array(Math.ceil(recipes.length / recipesPerPage)).keys()].map((number) => (
-                  <li key={number} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
-                    <button onClick={() => paginate(number + 1)} className="page-link">{number + 1}</button>
+                {[
+                  ...Array(Math.ceil(recipes.length / recipesPerPage)).keys(),
+                ].map((number) => (
+                  <li
+                    key={number}
+                    className={`page-item ${
+                      currentPage === number + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      onClick={() => paginate(number + 1)}
+                      className="page-link"
+                    >
+                      {number + 1}
+                    </button>
                   </li>
                 ))}
               </ul>

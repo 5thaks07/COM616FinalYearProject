@@ -25,6 +25,7 @@ function Chat() {
 
     // Initialize socket with token when component mounts
     const initializedSocket = initializeSocket(token);
+
     setSocket(initializedSocket);
     setIsLoggedIn(true); // Set isLoggedIn to true
 
