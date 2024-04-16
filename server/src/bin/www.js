@@ -35,7 +35,6 @@ const io = new Server(server, {
   },
 });
 
-
 // middleware for socket.io to check for valid token
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
@@ -53,30 +52,40 @@ io.use((socket, next) => {
   }
 });
 
+let users = [];
 io.on('connection', (socket) => {
+  console.log('a user connected', socket.id);
+
   const user = socket.decoded;
-  console.log('a user connected socket id: ', socket.id);
-  console.log('user: ', user);
 
-  // join a room
-  /* socket.join(user.id);
-  console.log('user joined room: ', user.id); */
+  // check if user already exists in the users array
+  !users.some((u) => u.userId === user.id) &&
+    users.push({ userId: user.id, socketId: socket.id });
 
-  // Handle messages
-  socket.on('message', (message) => {
-    console.log('message:', message);
-    io.to(user.id).emit('message', message);
+  // send onlineusers to the client
+  io.emit('onlineusers', users);
+
+  // Handle chat messages for individual clients
+  socket.on('sendmessage', (msg) => {
+    const user = users.find((u) => u.userId === msg.recipientId);
+    if (user) {
+      io.to(user.socketId).emit('getmessage', msg);
+    }
   });
 
   // Handle disconnect for individual clients
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    // remove the disconnected user from the users array
+    users = users.filter((u) => u.userId !== user.id);
+
+    io.emit('onlineusers', users);
   });
 });
 
 // check for errors
 io.on('error', (err) => {
-  console.log("io err",err);
+  console.log('io err', err);
 });
 
 server.listen(5000, () => {

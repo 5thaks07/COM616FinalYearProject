@@ -39,7 +39,6 @@ body {
   flex-direction: column;
 }
 
-
 .message-container {
   display: flex;
   flex-direction: column;
@@ -78,4 +77,20 @@ body {
 .message-sender {
   font-size: 12px;
   margin-top: 4px;
+}
+
+.online-indicator {
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px; /* Adjust this value to add space between the name and the indicator */
+}
+.message-input {
+  display: flex;
+  padding: 5px;
+}
+.message-input input {
+  margin-right: 10px; /* Add margin to the right of the input box */
 }

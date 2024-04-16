@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import initializeSocket from "../socket";
 
@@ -8,10 +8,12 @@ function Chat() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [socket, setSocket] = useState(null); // Store socket instance in state
   const [users, setUsers] = useState([]);
+  const [onlineusers, setOnlineUsers] = useState([]); // Store online users in state
   const [selectedUser, setSelectedUser] = useState(null); // Track the selected user for opening chat
   const [chatId, setChatId] = useState(null);
 
-  console.log("Messages", messages);
+  const chatContainerRef = useRef(null);
+
   useEffect(() => {
     // Fetch users from the backend
     fetchUsers();
@@ -37,6 +39,15 @@ function Chat() {
     };
   }, []); // Empty dependency array ensures that this effect runs only once
 
+  // get all the online users
+  useEffect(() => {
+    if (socket) {
+      socket.on("onlineusers", (users) => {
+        setOnlineUsers(users);
+      });
+    }
+  }, [socket]);
+
   // Fetch users from the backend
   const fetchUsers = async () => {
     try {
@@ -50,7 +61,7 @@ function Chat() {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log("Users data", data);
+
         setUsers(data.users);
       } else {
         console.log("Failed to fetch users");
@@ -63,7 +74,6 @@ function Chat() {
   // Handle click on a user to open chat
   const handleUserClick = (user) => {
     setSelectedUser(user);
-    console.log("Selected user", user);
 
     // fetch the chatId between the logged in user and the selected user
     const fetchChatId = async () => {
@@ -81,11 +91,9 @@ function Chat() {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log("Chat data", data);
-          console.log("ChatId", data.chat._id);
+
           setChatId(data.chat._id);
-          // join the chat room
-          // socket.emit("joinRoom", data.chatId);
+
           // fetch messages for the chat
           fetchMessages(data.chat._id);
         } else {
@@ -126,7 +134,16 @@ function Chat() {
   };
 
   const handleSendMessage = () => {
-    socket.emit("message", newMessage);
+    if (!newMessage) {
+      return;
+    }
+
+    // Emit the message to the backend with the recipient's ID
+    socket.emit("sendmessage", {
+      text: newMessage,
+      recipientId: selectedUser._id,
+    });
+
     setMessages([...messages, { text: newMessage, user: "You" }]);
     setNewMessage("");
     // send the message to the backend
@@ -157,11 +174,35 @@ function Chat() {
     sendMessage();
   };
 
+  // Scroll to the bottom of the chat container whenever messages change
+  useEffect(() => {
+    chatContainerRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Listen for incoming messages
+
+  useEffect(() => {
+    console.log("selectedUser", selectedUser);
+    if (socket) {
+      socket.on("getmessage", (msg) => {
+        setMessages([
+          ...messages,
+          { text: msg.text, senderId: selectedUser._id },
+        ]);
+        console.log("Incoming message", msg);
+      });
+
+      return () => {
+        socket.off("getmessage");
+      };
+    }
+  }, [socket, messages, selectedUser]);
+
   return (
     <div className="container">
       <div className="row">
         <div className="col-md-3">
-          <div className="card">
+          <div className="card mt-4 ">
             <div className="card-header">
               <h3>Users</h3>
             </div>
@@ -173,6 +214,9 @@ function Chat() {
                   onClick={() => handleUserClick(user)}
                 >
                   {user.name}
+                  {onlineusers.some(
+                    (onlineUser) => onlineUser.userId === user._id
+                  ) && <span className="online-indicator"></span>}
                 </li>
               ))}
             </ul>
@@ -181,7 +225,7 @@ function Chat() {
         <div className="col-md-9">
           {isLoggedIn ? (
             <>
-              <div className="card">
+              <div className="card mt-4">
                 <div className="card-header">
                   {selectedUser ? (
                     <h2>Chat with {selectedUser.name}</h2>
@@ -189,7 +233,11 @@ function Chat() {
                     <h2>Chat</h2>
                   )}
                 </div>
-                <div className="card-body">
+                <div
+                  className="card-body"
+                  style={{ maxHeight: "80vh", overflowY: "auto" }}
+                  ref={chatContainerRef}
+                >
                   {selectedUser ? (
                     <>
                       <div className="message-container">
@@ -202,6 +250,7 @@ function Chat() {
                                 ? "other-user-message"
                                 : "user-message"
                             }`}
+                            ref={chatContainerRef}
                           >
                             <div className="message-content">
                               {/* Render message sender based on whether it matches the selected user's ID */}
