@@ -182,7 +182,9 @@ function Chat() {
   // Listen for incoming messages
 
   useEffect(() => {
-    console.log("selectedUser", selectedUser);
+    if (!selectedUser) {
+      return;
+    }
     if (socket) {
       socket.on("getmessage", (msg) => {
         setMessages([
