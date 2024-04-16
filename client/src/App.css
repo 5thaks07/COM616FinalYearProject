@@ -40,3 +40,42 @@ body {
 }
 
 
+.message-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-row {
+  margin-bottom: 10px;
+}
+
+.user-message {
+  align-self: flex-end;
+}
+
+.user-message-content {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.other-user-message {
+  align-self: flex-start;
+}
+
+.other-user-message-content {
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.message-text {
+  font-size: 16px;
+}
+
+.message-sender {
+  font-size: 12px;
+  margin-top: 4px;
+}

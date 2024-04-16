@@ -9,6 +9,10 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   MessageController.createMessage
 );
-router.get('/get/:chatId', MessageController.getMessages);
+router.get(
+  '/get/:chatId',
+  passport.authenticate('jwt', { session: false }),
+  MessageController.getMessages
+);
 
 export default router;

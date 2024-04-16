@@ -6,8 +6,6 @@ export const createMessage = async (req, res) => {
   const senderId = req.user._id;
   const { chatId, text } = req.body;
 
-console.log(req.body);
-console.log(req.user);
   try {
     const newMessage = new Message({
       chatId,

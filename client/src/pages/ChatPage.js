@@ -11,7 +11,7 @@ function Chat() {
   const [selectedUser, setSelectedUser] = useState(null); // Track the selected user for opening chat
   const [chatId, setChatId] = useState(null);
 
-  console.log("socket", socket);
+  console.log("Messages", messages);
   useEffect(() => {
     // Fetch users from the backend
     fetchUsers();
@@ -63,50 +63,58 @@ function Chat() {
   const handleUserClick = (user) => {
     setSelectedUser(user);
     console.log("Selected user", user);
-    
+
     // fetch the chatId between the logged in user and the selected user
-  const fetchChatId = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/chat/create/${user._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Chat data", data);
-        console.log("ChatId", data.chat._id);
-        setChatId(data.chat._id);
-        // join the chat room
-       // socket.emit("joinRoom", data.chatId);
-        // fetch messages for the chat
-        fetchMessages(data.chat._id);
-      } else {
-        console.log("Failed to fetch chatId");
+    const fetchChatId = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `http://localhost:5000/chat/create/${user._id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Chat data", data);
+          console.log("ChatId", data.chat._id);
+          setChatId(data.chat._id);
+          // join the chat room
+          // socket.emit("joinRoom", data.chatId);
+          // fetch messages for the chat
+          fetchMessages(data.chat._id);
+        } else {
+          console.log("Failed to fetch chatId");
+        }
+      } catch (error) {
+        console.log("Failed to fetch chatId", error);
       }
-    } catch (error) {
-      console.log("Failed to fetch chatId", error);
-    }     
-  }
+    };
     fetchChatId();
   };
-
 
   // Fetch messages for the chat
   const fetchMessages = async (chatId) => {
     try {
-      const response = await fetch(`http://localhost:5000/message/get/${chatId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:5000/message/get/${chatId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         console.log("Messages data", data);
+
         setMessages(data.messages);
       } else {
         console.log("Failed to fetch messages");
@@ -115,7 +123,6 @@ function Chat() {
       console.log("Failed to fetch messages", error);
     }
   };
-
 
   const handleSendMessage = () => {
     socket.emit("message", newMessage);
@@ -185,12 +192,31 @@ function Chat() {
                   {selectedUser ? (
                     <>
                       <div className="message-container">
+                        {/* Display messages */}
                         {messages.map((message, index) => (
-                          <div key={index}>
-                            <strong>{message.user}:</strong> {message.text}
+                          <div
+                            key={index}
+                            className={`message-row ${
+                              message.senderId === selectedUser._id
+                                ? "other-user-message"
+                                : "user-message"
+                            }`}
+                          >
+                            <div className="message-content">
+                              {/* Render message sender based on whether it matches the selected user's ID */}
+                              {message.senderId === selectedUser._id ? (
+                                <div className="message-sender">
+                                  {selectedUser.name}
+                                </div>
+                              ) : (
+                                <div className="message-sender">You</div>
+                              )}
+                              <div className="message-text">{message.text}</div>
+                            </div>
                           </div>
                         ))}
                       </div>
+
                       <div className="message-input">
                         <input
                           type="text"
