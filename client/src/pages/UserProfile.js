@@ -13,6 +13,9 @@ const UserProfile = () => {
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("token");
+        if (!token) {
+          return;
+        }
         const response = await fetch("http://localhost:5000/user/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -179,7 +182,7 @@ const UserProfile = () => {
             </p>
             <p>
               <strong>
-                <Link to="/saved-recipes" className="btn btn-success">
+                <Link to="/saved-recipes-list" className="btn btn-success">
                   <i className="fas fa-save"></i> Saved Recipes: {userDetails.savedRecipesCount}
                 </Link>
               </strong>{" "}

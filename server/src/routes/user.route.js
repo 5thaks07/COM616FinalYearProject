@@ -11,6 +11,11 @@ router.post('/register', UserController.create);
 // route for getting user profile by id
 router.get('/profile/:id', UserController.getUser);
 
+// route for getting all users
+router.get('/users',
+  passport.authenticate('jwt', { session: false }),
+ UserController.getUsers);
+
 // route for getting user profile by token
 router.get(
   '/profile',
@@ -41,5 +46,10 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   UserController.updateUser
 );
-
+// route for removing a saved recipe
+router.delete(
+  '/savedrecipes/:id',
+  passport.authenticate('jwt', { session: false }),
+  UserController.removeSavedRecipe
+);  
 export default router;

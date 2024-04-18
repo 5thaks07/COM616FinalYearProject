@@ -42,6 +42,22 @@ export const getUser = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+// Get all the users
+export const getUsers = async (req, res) => {
+  try {
+    const user = req.user;
+    // Find all the users and return only the id and name fields, and exclude the user who is making the request
+    const users = await User.find({ _id: { $ne: user._id } }, 'id name');
+
+    // Send back the users
+
+    return res.json({ users });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 export const login = async (req, res) => {
   try {
     // check if all fields are provided
@@ -258,6 +274,54 @@ export const updateUser = async (req, res) => {
       redirect: '/',
     });
   } catch (e) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// remove a recipe from the user's saved recipes
+
+export const removeSavedRecipe = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const recipeId = req.params.id;
+
+    // Check if the user ID is valid
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the recipe ID is valid
+    if (!mongoose.Types.ObjectId.isValid(recipeId)) {
+      return res.status(400).json({ message: 'Invalid recipe ID' });
+    }
+
+    // Find the recipe by ID
+    const recipe = await Recipe.findById(recipeId);
+
+    // Check if the recipe exists
+    if (!recipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    // Remove the recipe ID from the user's savedRecipes array
+    user.savedRecipes = user.savedRecipes.filter(
+      (id) => id.toString() !== recipeId
+    );
+    await user.save();
+
+    return res.status(200).json({
+      message: 'Recipe removed from saved recipes',
+    });
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
