@@ -203,28 +203,30 @@ function Chat() {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-3">
-          <div className="card mt-4 ">
-            <div className="card-header">
-              <h3>Users</h3>
+        {isLoggedIn && (
+          <div className="col-md-3">
+            <div className="card mt-4 ">
+              <div className="card-header">
+                <h3>Users</h3>
+              </div>
+              <ul className="list-group list-group-flush">
+                {users.map((user) => (
+                  <li
+                    key={user._id}
+                    className="list-group-item"
+                    onClick={() => handleUserClick(user)}
+                  >
+                    {user.name}
+                    {onlineusers.some(
+                      (onlineUser) => onlineUser.userId === user._id
+                    ) && <span className="online-indicator"></span>}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="list-group list-group-flush">
-              {users.map((user) => (
-                <li
-                  key={user._id}
-                  className="list-group-item"
-                  onClick={() => handleUserClick(user)}
-                >
-                  {user.name}
-                  {onlineusers.some(
-                    (onlineUser) => onlineUser.userId === user._id
-                  ) && <span className="online-indicator"></span>}
-                </li>
-              ))}
-            </ul>
           </div>
-        </div>
-        <div className="col-md-9">
+        )}
+        <div className={isLoggedIn ? "col-md-9" : "col-md-12"}>
           {isLoggedIn ? (
             <>
               <div className="card mt-4">
