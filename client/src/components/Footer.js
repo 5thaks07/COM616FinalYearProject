@@ -17,6 +17,7 @@ function Footer() {
           type="button"
           className="btn btn-primary btn-lg btn-floating mx-2"
           style={{ backgroundColor: "#54456b" }}
+          data-testid="facebook-button"
         >
           <i className="fab fa-facebook-f"></i>
         </button>
@@ -24,6 +25,7 @@ function Footer() {
           type="button"
           className="btn btn-primary btn-lg btn-floating mx-2"
           style={{ backgroundColor: "#54456b" }}
+          data-testid="youtube-button"
         >
           <i className="fab fa-youtube"></i>
         </button>
@@ -31,6 +33,7 @@ function Footer() {
           type="button"
           className="btn btn-primary btn-lg btn-floating mx-2"
           style={{ backgroundColor: "#54456b" }}
+          data-testid="instagram-button"
         >
           <i className="fab fa-instagram"></i>
         </button>
@@ -38,6 +41,7 @@ function Footer() {
           type="button"
           className="btn btn-primary btn-lg btn-floating mx-2"
           style={{ backgroundColor: "#54456b" }}
+          data-testid="twitter-button"
         >
           <i className="fab fa-twitter"></i>
         </button>
