@@ -1,6 +1,6 @@
 # YumYumHub
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+YumYumHub is a web-based platform designed to provide users with a comprehensive collection of recipes from around the world. This repository contains the source code for the YumYumHub application.
 
 ## Available Scripts
 
