@@ -2,6 +2,21 @@
 
 YumYumHub is a web-based platform designed to provide users with a comprehensive collection of recipes from around the world. This repository contains the source code for the YumYumHub application.
 
+Features
+Search: Easily search for recipes based on keywords or ingredients.
+Explore: Discover new and trending recipes from various cuisines.
+Upload: Share your own recipes with the YumYumHub community.
+Real-time Chat: Interact with other users in real-time through the chat feature.
+User Authentication: Secure login and registration system to protect user accounts.
+Responsive Design: Enjoy a seamless experience across devices of all sizes.
+
+Technologies Used
+Frontend: React.js, HTML, CSS
+Backend: Node.js, Express.js, MongoDB
+Authentication: JWT (JSON Web Tokens)
+Real-time Communication: Socket.IO
+Testing: Jest, React Testing Library
+Deployment: Heroku (Backend), Netlify (Frontend)
 ## Available Scripts
 
 In the project directory, you can run:
